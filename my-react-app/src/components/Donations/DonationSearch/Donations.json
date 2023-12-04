@@ -1,0 +1,100 @@
+[ 
+{"id": "1",
+"donation_category": "Books",
+"donated_items_name": "Books for children",
+"items_description":  "5 books for a child (0-5 years old)",
+"pick_up_instructions": "Please email me for pick up instructions at isabel.ocampot@gmail.com "
+},
+
+{"id": "2",
+"donation_category": "Baby products",
+"donated_items_name": "Clothes for a girl",
+"items_description":"I would like to donate  clothes for a girl ( height: 90 to 95 cm) : 2 sweaters, 5 dresses, 1 winter jacket, 1 pair of winter boots, 2 skirts, 3 jeans, 5 pairs of socks ). Pictures attached. Everything is in  great condition. My daughter almost did not wear these clothes as she outgrew them too fast. Pictures attached",
+"pick_up_instructions": "Please email me for pick up instructions at isabel.ocampot@gmail.com"
+},
+
+{"id": "3",
+"donation_category": "Clothes",
+"donated_items_name": "Warm clothes for women",
+"items_description":"Warm clothes for a woman( (size S, 42): 2 sweaters, 1 winter coat, 3 pairs of glows, 2 pairs of winter boots). Everything is in a good condition",
+"pick_up_instructions": "please email me for pick up instructions at cora.gassen@gmail.com"
+},
+
+{"id": "4",
+"donation_category": "Furniture",
+"donated_items_name": "Furniture",
+"items_description":"TV stand, couch, 6 dining room chairs. Everything is in a good condition",
+"pick_up_instructions": "please email me for pick up instructions at cora.gassen@gmail.com"
+},
+
+{"id": "5",
+"donation_category": "Electronics",
+"donated_items_name": "TV",
+"items_description":"Used Samsung TV in a good condition",
+"pick_up_instructions": "Please email me for pick up instructions at cora.gassen@gmail.com"
+},
+
+{"id": "6",
+"donation_category": "Furniture",
+"donated_items_name": "Non-fiction books for lawyers",
+"items_description":"The Tools of the Argument, Thinking Like a lawyer, The Game Changing Attorney, Dictionary of Legal Terms, Memory Skills for Lawyers, The Little Black Book of Lawyer’s Wisdom, How to be a lawyer",
+"pick_up_instructions": "Please email me for pick up instructions at bhoward@howardllp.com"
+},
+
+{"id": "7",
+"donation_category": "Other",
+"donated_items_name": "Christmas decorations",
+"items_description":"6 feet tall green Christmas Tree, 50 multi-colour Christmas Ornaments, a star for the top of the tree, 600 multi-colour Christmas lights. All are in perfect condition. If interested, check the pictures.",
+"pick_up_instructions": "Please email me for pick up instructions at margaryta.verveiko@gmail.com"
+},
+
+{"id": "8",
+"donation_category": "Kitchen utilities and appliances",
+"donated_items_name": "Microwave, coffee maker, toaster",
+"items_description":"1 microwave, 1 coffee maker, 1 toaster. Pictures attached",
+"pick_up_instructions": "Please email me for pick up instructions at Jasmeet.k@gmail.com"
+},
+
+{"id": "9",
+"donation_category": "Clothes",
+"donated_items_name": "Woman clothes",
+"items_description": "Women dresses (5), shoes (3 pairs), jackets (2), and apparel - size 42",
+"pick_up_instructions": "Please email me for pick up instructions at a.dandapani@gmail.com "
+},
+
+{"id": "10",
+"donation_category": "Baby products",
+"donated_items_name": "Child Care products",
+"items_description":" Diapers (Pampers for 6 - 10 months), video-nanny (Samsung), rocking chair, bed ( 0 - 12 months). Everything is in perfect condition. We no longer need them because my kids already outgrew these products. Pictures provided. I would love to give these items to someone who really needs them.",
+"pick_up_instructions": "Please email me for pick up instructions at irina.loshkareva@gmail.com"
+},
+
+{"id": "11",
+"donation_category": "Kitchen utilities and appliances",
+"donated_items_name": "Knives and cutting boards",
+"items_description":"Sets of knives and cutting boards. Pictures attached'",
+"pick_up_instructions": "Please email me for pick up instructions at Kira.Dinmukhamedova@gmail.com"
+},
+
+{"id": "12",
+"donation_category": "Books",
+"donated_items_name": "Books",
+"items_description":"Shakespeare - Collection of Best Works, Mark Twain - Prince and the Pauper, Astrid Lindgren - Pippi Longstocking, Daniel Defoe - Robinson Crusoe , O. Henry - Stories, Agata Christie - Poirot ",
+"pick_up_instructions": "Please email me for pick up instructions at pabsalon@hotmail.com"
+},
+
+{"id": "13",
+"donation_category": "Electronics",
+"donated_items_name": "Tablet and laptop",
+"items_description": "Tablet Samsung Galaxy Tab A7, laptop Acer Aspire 5 A515-56-36UT, touchscreen ",
+"pick_up_instructions": "Please email me for pick up instructions at matthew.chau@gmail.com"
+},
+
+{"id": "14",
+"donation_category": "Appliances",
+"donated_items_name": "Air conditioner",
+"items_description": "Air conditioner - Lennox  EL16XC1024 2 TON, Fan - Honeywell HS1655CV1 QuietSet® 16 Whole Room Stand Fan, Black, with Oscillation, Remote Control. Pictures attached",
+"pick_up_instructions": "Please email me for pick up instructions at Jean-Paul.Torrez@gmail.com"
+}
+
+]

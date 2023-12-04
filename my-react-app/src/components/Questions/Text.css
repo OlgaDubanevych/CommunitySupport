@@ -1,0 +1,18 @@
+.header {
+        background-color: #BE212F;
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        width: 85%;
+        margin-left: 30px;
+      }
+
+
+.text {
+    font-size: 18px;
+    margin-left: 40px;
+    color:#BE212F;
+    width: 85%;
+    text-align: justify;
+  }
+

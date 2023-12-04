@@ -1,0 +1,82 @@
+.other_text {
+    font-size: 16px;
+    margin-right: 10px;
+    line-height: 2;
+    width: 85%;
+    text-align: justify;
+    color: black;
+    margin-left: 40px;
+     
+}
+
+.submit{
+margin-left: 40px;
+background: white;
+color:#BE212F;
+width:70px;
+font-weight:bold;
+}
+
+.story-divider {
+border-top: 1px solid #0a0a0a; 
+margin-top:15px; 
+padding-top: 15px; 
+}
+
+.header {
+background-color: #BE212F;
+color: white;
+padding: 20px;
+border-radius: 10px;
+width: 85%;
+margin-left: 30px;
+}
+
+.input-text {
+width: 85%;
+margin-left: 40px;
+text-align: left;
+font-size: 18px;
+color:#BE212F;
+}
+
+
+.story-divider {
+border-top: 1px solid #0a0a0a; 
+margin-top:15px; 
+padding-top: 15px; 
+}
+
+.text {
+font-size: 18px;
+margin-left: 40px;
+color:#BE212F;
+width: 85%;
+text-align: justify;
+}
+
+.picture_upload{
+text-align: start;
+}
+
+.submit_button{
+    background: white;
+    color:#BE212F;
+    width:70px;
+    font-weight:bold;
+    }
+
+    /* For screens between 481px and 1279px */
+@media only screen and (min-width: 481px) and (max-width: 1279px) {
+    .input-text {
+      font-size: 14px
+    }
+    
+  }
+  
+  /* For screens up to 480px */
+  @media only screen and (max-width: 480px) {
+    .input-text {
+      font-size: 12px
+  }
+}

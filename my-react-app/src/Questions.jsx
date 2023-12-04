@@ -187,7 +187,7 @@ const Questions = () => {
 export default Questions;
 */
 
-import React, { useState, useEffect } from "react";
+/*import React, { useState, useEffect } from "react";
 
 const Questions = () => {
   const [inputQuestion, setInputQuestion] = useState("");
@@ -437,3 +437,4 @@ const Questions = () => {
 };
 
 export default Questions;
+*/

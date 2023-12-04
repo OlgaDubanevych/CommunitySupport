@@ -1,0 +1,13 @@
+.text-post {background-color: #BE212F;
+color: white;
+padding: 20px;
+border-radius: 10px;
+margin-left: 40px;
+}
+.text-submit{
+    background-color:white;
+    color: #BE212F;
+    font-weight: bolder;
+    padding: 10px;
+    margin-left: 40px;
+}

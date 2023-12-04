@@ -1,0 +1,126 @@
+.questions-header {
+  background-color: #BE212F;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 85%;
+  margin-left: 30px;
+
+}
+
+.question-row {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.question-category {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.question-topic {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.question-text {
+  font-size: 14px;
+  margin-right: 10px;
+  line-height: 1.5;
+  width: 85%;
+  text-align: justify;
+  color: black;
+  margin-left: 40px;
+  font-weight: bolder;
+}
+
+.comments {
+  font-size: 14px;
+  margin-right: 10px;
+  line-height: 1.5; 
+  width: 85%;
+  text-align: justify;
+}
+
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: justify;
+  width: 85%;
+  color: black;
+  margin-left: 40px;
+  font-weight: bolder;
+}
+
+.comment-form {
+  margin-top: 10px;
+}
+
+.comment-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  height: 60px;
+  font-size: 14px;
+  padding: 5px;
+  margin-bottom: 5px;
+  line-height: 1.5;
+}
+
+.comment-form button {
+  background-color: #EFEFEF;
+  color: #BE212F;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  outline: none;
+}
+
+.comment-form button:hover {
+  background-color: #BE212F;
+  color: white;
+}
+
+.comment-text {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.comment-header {
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.like-button{
+  margin-left: 40px;
+}
+
+.liked-count-text {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bolder;
+  background-color: #BE212F;
+  color: white;
+  padding: 20px;
+  margin-left: 30px;
+  width:25%
+}
+
+.bullet-point {
+  margin-right: 5px;
+}
+
+.submit-button {
+  width:70px
+}

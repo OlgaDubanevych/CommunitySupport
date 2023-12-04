@@ -63,9 +63,13 @@ public class Questions {
                 String text = textMatcher.group(1);
                 String comment = commentMatcher.find() ? commentMatcher.group(1) : "";
         
-                // Create a new question with the provided text and comment
+                // Create a new question with the provided text
                 Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, false); // Set liked to false initially
-                newQuestion.addComment(comment); // Add the comment
+        
+                // Add the comment only if it is present
+                if (!comment.isEmpty()) {
+                    newQuestion.addComment(comment);
+                }
         
                 questions.add(newQuestion);
         
@@ -76,7 +80,6 @@ public class Questions {
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
-        
         
         private void handleCommentPostRequest(HttpExchange exchange, String questionId) throws IOException {
             // Read the request body

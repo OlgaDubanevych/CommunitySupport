@@ -1,0 +1,37 @@
+.donations-header{
+    background-color: #BE212F;
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 85%;
+    margin-left: 30px;
+}
+
+.item-description {
+    font-size: 14px;
+    margin-right: 10px;
+    line-height: 1.5;
+    width: 85%;
+    text-align: justify;
+    color: black;
+    margin-left: 40px;
+    font-weight: bolder;
+}
+
+.pickup-instructions {
+    font-size: 14px;
+    line-height: 1.5;
+    text-align: justify;
+    width: 85%;
+    color: black;
+    margin-left: 40px;
+    font-weight: bolder;
+}
+
+.recommendation-button{
+    margin-left: 40px;
+    width:180px;
+    background-color: white;
+    color: #BE212F;
+    font-weight: bolder;
+}

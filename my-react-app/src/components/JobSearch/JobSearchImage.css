@@ -1,0 +1,28 @@
+.image-display {
+    display: flex;
+    justify-content: center;
+}
+
+.image {
+    height: 125px;
+    width: 125px;
+    object-fit: contain;
+}
+
+/* For screens between 481px and 1279px */
+@media only screen and (min-width: 481px) and (max-width: 1279px) {
+    .image {
+        height: 100x;
+        width: 100px;
+        object-fit: contain;
+    }
+}
+
+/* For screens up to 480px */
+@media only screen and (max-width: 480px) {
+    .image {
+        height: 75px;
+        width: 75px;
+        object-fit: contain;
+    }
+}
