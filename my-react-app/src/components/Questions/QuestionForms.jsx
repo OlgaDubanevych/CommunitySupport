@@ -49,49 +49,51 @@ function QuestionForms({ addQuestion }) {
   };
 
   return (
-    <form className="text" onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <p></p>
-      <h1 className="text-post">Ask Your Question: </h1>
-      <p></p>
-      <textarea
-        className="text"
-        type="text"
-        name="questionText"
-        value={questionText}
-        placeholder="Type your question here"
-        onChange={(e) => setQuestionText(e.target.value)}
-      />
+      <h1 className="questions-header">Ask Your Question: </h1>
+      <div className="text">
+        <p></p>
+        <textarea
+          className="text"
+          type="text"
+          name="questionText"
+          value={questionText}
+          placeholder="Type your question here"
+          onChange={(e) => setQuestionText(e.target.value)}
+        />
 
-      <br />
-      <label className="text">Please select your question category </label>
-      <p></p>
-      <select
-        className="text"
-        value={questionCategory}
-        placeholder="Choose your question category"
-        onChange={handleChange}
-        name="questionCategory"
-      >
-        <option value="Job Search/Career">Job Search/Career</option>
-        <option value="Immigration">Immigration</option>
-        <option value="Education - College/University">
-          Education - College/University
-        </option>
-        <option value="Education - High School/Daycare">
-          {" "}
-          Education - High School/Daycare
-        </option>
-        <option value="Healthcare">Healthcare</option>
-        <option value="Family/Relationships">Family/Relationships</option>
-        <option value="Real Estate"> Real Estate/ Rent</option>
-        <option value="Entertainment">Entertainment</option>
-        <option value="Other">Other</option>
-      </select>
-      <p>
-        <button className="text-submit" type="submit">
-          Submit
-        </button>
-      </p>
+        <br />
+        <label className="text">Please select your question category </label>
+        <p></p>
+        <select
+          className="text"
+          value={questionCategory}
+          placeholder="Choose your question category"
+          onChange={handleChange}
+          name="questionCategory"
+        >
+          <option value="Job Search/Career">Job Search/Career</option>
+          <option value="Immigration">Immigration</option>
+          <option value="Education - College/University">
+            Education - College/University
+          </option>
+          <option value="Education - High School/Daycare">
+            {" "}
+            Education - High School/Daycare
+          </option>
+          <option value="Healthcare">Healthcare</option>
+          <option value="Family/Relationships">Family/Relationships</option>
+          <option value="Real Estate"> Real Estate/ Rent</option>
+          <option value="Entertainment">Entertainment</option>
+          <option value="Other">Other</option>
+        </select>
+        <p>
+          <button className="text-submit" type="submit">
+            Submit
+          </button>
+        </p>
+      </div>
     </form>
   );
 }

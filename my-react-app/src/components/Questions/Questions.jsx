@@ -1,6 +1,6 @@
-// Questions component
 import React, { useState, useEffect } from "react";
-import QuestionForms from "./QuestionForms"; // Import the QuestionForms component
+import QuestionForms from "./QuestionForms";
+import "./Questions.css";
 
 const Questions = () => {
   const [inputComment, setInputComment] = useState("");
@@ -51,16 +51,20 @@ const Questions = () => {
       console.log("New question received:", newQuestion);
 
       const formattedQuestion = {
-        id: newQuestion.id, // Assuming the new question data includes an 'id' property
+        id: newQuestion.id,
         text: newQuestion.text,
-        liked: newQuestion.liked || false, // Set liked to false if not present
-        likes: newQuestion.likes || 0, // Set likes to 0 if not present
-        comments: newQuestion.comments || [], // Set comments to an empty array if not present
+        liked: newQuestion.liked || false,
+        likes: newQuestion.likes || 0,
+        comments: newQuestion.comments || [],
       };
 
       console.log("Formatted question:", formattedQuestion);
 
+      // Update the state by providing a new array to trigger a re-render
       setAllQuestions((prevQuestions) => [formattedQuestion, ...prevQuestions]);
+
+      // Wait for the state to update and then fetch questions
+      await fetchQuestions();
     } catch (error) {
       console.error("Error adding question:", error);
     }
@@ -122,55 +126,66 @@ const Questions = () => {
 
   return (
     <div>
+      <div>
+        <h1 className="questions-header">Questions</h1>
+        {loading ? (
+          <p>Loading questions...</p>
+        ) : error ? (
+          <p>{error}</p>
+        ) : allQuestions.length === 0 ? (
+          <p>No questions available</p>
+        ) : (
+          <div className="questions-container">
+            {allQuestions.map((question) => (
+              <div key={question.id}>
+                <p className="question-text">{question.text}</p>
+
+                {question.comments && question.comments.length > 0 && (
+                  <div className="comment-text">
+                    {question.comments.map((comment, index) => (
+                      <div key={`${question.id}-${index}`}>{comment}</div>
+                    ))}
+                  </div>
+                )}
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleCommentSubmit(question.id);
+                  }}
+                >
+                  <label className="comment-form">
+                    Leave your comment:
+                    <p></p>
+                    <input
+                      className="comment-form textarea"
+                      type="text"
+                      value={inputComment}
+                      onChange={handleCommentChange}
+                    />
+                  </label>
+                  <p></p>
+                  <button className="submit-button" type="submit">
+                    Submit Comment
+                  </button>
+                </form>
+                <p></p>
+                <button
+                  onClick={() => handleLike(question.id, !question.liked)}
+                  className={`like-button ${question.liked ? "liked" : ""}`}
+                >
+                  <span className="like-icon">👍</span>
+                  <span className="like-text text">
+                    {question.liked ? "Liked" : "Like"}
+                  </span>
+                </button>
+                <p></p>
+                <span className="text">Likes: {question.likes}</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <QuestionForms addQuestion={handleAddQuestion} />
-      <h2>All Questions</h2>
-      {loading ? (
-        <p>Loading questions...</p>
-      ) : error ? (
-        <p>{error}</p>
-      ) : allQuestions.length === 0 ? (
-        <p>No questions available</p>
-      ) : (
-        <div>
-          {allQuestions.map((question) => (
-            <div key={question.id}>
-              <p>{question.text}</p>
-              <button
-                onClick={() => handleLike(question.id, !question.liked)}
-                className={`like-button ${question.liked ? "liked" : ""}`}
-              >
-                <span className="like-icon">👍</span>
-                <span className="like-text text">
-                  {question.liked ? "Liked" : "Like"}
-                </span>
-              </button>
-              <span>Likes: {question.likes}</span>
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                  handleCommentSubmit(question.id);
-                }}
-              >
-                <label>
-                  Your Comment:
-                  <input
-                    type="text"
-                    value={inputComment}
-                    onChange={handleCommentChange}
-                  />
-                </label>
-                <button type="submit">Submit Comment</button>
-              </form>
-              <ul>
-                {question.comments &&
-                  question.comments.map((comment, index) => (
-                    <li key={index}>{comment}</li>
-                  ))}
-              </ul>
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 };

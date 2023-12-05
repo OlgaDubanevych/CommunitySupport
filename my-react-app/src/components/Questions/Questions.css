@@ -1,11 +1,40 @@
 .questions-header {
-  background-color: #BE212F;
+  background-color: #be212f;
   color: white;
   padding: 20px;
   border-radius: 10px;
   width: 85%;
-  margin-left: 30px;
+  margin-left: 40px;
+}
 
+.questions-container {
+  margin-top: 20px;
+}
+
+.question-text {
+  font-size: 20px;
+  margin-right: 10px;
+  line-height: 1.5;
+  width: 85%;
+  text-align: justify;
+  color: black;
+  margin-left: 40px;
+  font-weight: bolder;
+}
+
+.comment-text {
+  font-size: 14px;
+  margin-right: 10px;
+  line-height: 1.5;
+  width: 85%;
+  text-align: justify;
+  color: black;
+  margin-left: 60px;
+  font-weight: bolder;
+}
+
+.like-text {
+  color: black;
 }
 
 .question-row {
@@ -14,52 +43,22 @@
   margin-bottom: 10px;
 }
 
-.question-category {
+.question-category,
+.question-topic,
+.comment-header {
   font-size: 16px;
   font-weight: bold;
   margin-right: 10px;
 }
 
-.question-topic {
-  font-size: 16px;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.question-text {
-  font-size: 14px;
-  margin-right: 10px;
-  line-height: 1.5;
-  width: 85%;
-  text-align: justify;
-  color: black;
+.comment-form,
+.like-button {
   margin-left: 40px;
-  font-weight: bolder;
-}
-
-.comments {
-  font-size: 14px;
-  margin-right: 10px;
-  line-height: 1.5; 
-  width: 85%;
-  text-align: justify;
-}
-
-.comment-text {
-  font-size: 14px;
-  line-height: 1.5;
-  text-align: justify;
-  width: 85%;
-  color: black;
-  margin-left: 40px;
-  font-weight: bolder;
-}
-
-.comment-form {
   margin-top: 10px;
 }
 
 .comment-form label {
+  margin-left: 40px;
   display: block;
   margin-bottom: 5px;
   font-size: 14px;
@@ -72,11 +71,13 @@
   padding: 5px;
   margin-bottom: 5px;
   line-height: 1.5;
+  margin-left: 40px;
 }
 
-.comment-form button {
-  background-color: #EFEFEF;
-  color: #BE212F;
+.comment-form button,
+.submit-button {
+  background-color: #efefef;
+  color: #be212f;
   border: none;
   border-radius: 5px;
   padding: 5px 10px;
@@ -84,43 +85,31 @@
   font-weight: bold;
   cursor: pointer;
   outline: none;
-}
-
-.comment-form button:hover {
-  background-color: #BE212F;
-  color: white;
-}
-
-.comment-text {
-  font-size: 14px;
-  line-height: 1.5;
-}
-
-.comment-header {
-  font-size: 16px;
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.like-button{
   margin-left: 40px;
+}
+
+.comment-form button:hover,
+.submit-button:hover {
+  background-color: #be212f;
+  color: white;
 }
 
 .liked-count-text {
   margin-top: 10px;
   font-size: 16px;
   font-weight: bolder;
-  background-color: #BE212F;
+  background-color: #be212f;
   color: white;
   padding: 20px;
-  margin-left: 30px;
-  width:25%
+  margin-left: 40px;
+  width: 25%;
 }
 
 .bullet-point {
   margin-right: 5px;
 }
 
-.submit-button {
-  width:70px
+.questions-container > div:not(:last-child) {
+  border-bottom: 1px solid black;
+  margin-bottom: 20px;
 }
