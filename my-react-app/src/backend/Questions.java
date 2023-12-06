@@ -1,37 +1,20 @@
-/*import com.sun.net.httpserver.Headers;
+package backend;
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class JavaBackend {
+public class Questions {
     private static final List<Question> questions = new ArrayList<>();
     private static int questionIdCounter = 1;
 
-    public static void main(String[] args) {
-        try {
-            // Create a simple HTTP server on port 7000
-            HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
-
-            // Create a context for the '/api/questions' endpoint
-            server.createContext("/api/questions", new QuestionsHandler());
-
-            // Start the server
-            server.start();
-            System.out.println("Server is running on port 7000");
-        } catch (IOException e) {
-            System.err.println("Error starting the server: " + e.getMessage());
-        }
-    }
-
-    static class QuestionsHandler implements HttpHandler {
+    public static class QuestionsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
             // Enable CORS
@@ -47,12 +30,16 @@ public class JavaBackend {
             }
 
             if ("POST".equals(exchange.getRequestMethod())) {
-                // Check if the request is for posting a question or a comment
+                // Check if the request is for posting a question, a comment, or updating likes
                 String path = exchange.getRequestURI().getPath();
                 if (path.matches("/api/questions/\\d+/comments")) {
                     // Extract question ID from the path
                     String questionId = path.replaceAll("/api/questions/(\\d+)/comments", "$1");
                     handleCommentPostRequest(exchange, questionId);
+                } else if (path.matches("/api/questions/likes/\\d+")) {
+                    // Extract question ID from the path
+                    String questionId = path.replaceAll("/api/questions/likes/(\\d+)", "$1");
+                    handleLikePostRequest(exchange, questionId);
                 } else {
                     handlePostRequest(exchange);
                 }
@@ -66,21 +53,27 @@ public class JavaBackend {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
-
+        
             // Use regex to extract the text and comment properties
             Pattern textPattern = Pattern.compile("\"text\":\"(.*?)\"");
             Pattern commentPattern = Pattern.compile("\"comment\":\"(.*?)\"");
             Matcher textMatcher = textPattern.matcher(requestBody);
             Matcher commentMatcher = commentPattern.matcher(requestBody);
-
+        
             if (textMatcher.find()) {
                 String text = textMatcher.group(1);
                 String comment = commentMatcher.find() ? commentMatcher.group(1) : "";
-
-                // Create a new question with the provided text and comment
-                Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, comment);
+        
+                // Create a new question with the provided text
+                Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, false); // Set liked to false initially
+        
+                // Add the comment only if it is present
+                if (!comment.isEmpty()) {
+                    newQuestion.addComment(comment);
+                }
+        
                 questions.add(newQuestion);
-
+        
                 // Send back the updated list of questions
                 sendResponse(exchange, 200, convertQuestionsToJson());
             } else {
@@ -88,7 +81,7 @@ public class JavaBackend {
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
-
+        
         private void handleCommentPostRequest(HttpExchange exchange, String questionId) throws IOException {
             // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
@@ -105,6 +98,42 @@ public class JavaBackend {
                 if (question != null) {
                     // Add the comment to the question
                     question.addComment(comment);
+
+                    // Send back the updated list of questions
+                    sendResponse(exchange, 200, convertQuestionsToJson());
+                } else {
+                    // Handle question not found
+                    sendResponse(exchange, 404, "Question not found");
+                }
+            } else {
+                // Handle regex match failure
+                sendResponse(exchange, 400, "Invalid JSON format");
+            }
+        }
+
+        private void handleLikePostRequest(HttpExchange exchange, String questionId) throws IOException {
+            // Read the request body
+            String requestBody = new String(exchange.getRequestBody().readAllBytes());
+
+            // Use regex to extract the liked property
+            Pattern likedPattern = Pattern.compile("\"liked\":(true|false)");
+            Matcher likedMatcher = likedPattern.matcher(requestBody);
+
+            if (likedMatcher.find()) {
+                boolean liked = Boolean.parseBoolean(likedMatcher.group(1));
+
+                // Find the question with the specified ID
+                Question question = findQuestionById(questionId);
+                if (question != null) {
+                    // Update the like status of the question
+                    question.setLiked(liked);
+
+                    // Update the likes count
+                    if (liked) {
+                        question.setLikes(question.getLikes() + 1);
+                    } else {
+                        question.setLikes(question.getLikes() - 1);
+                    }
 
                     // Send back the updated list of questions
                     sendResponse(exchange, 200, convertQuestionsToJson());
@@ -136,8 +165,9 @@ public class JavaBackend {
             for (Question question : questions) {
                 json.append("{\"id\":\"").append(question.getId())
                         .append("\",\"text\":\"").append(question.getText())
-                        .append("\",\"comment\":\"").append(question.getComment())
-                        .append("\",\"comments\":").append(convertCommentsToJson(question.getComments()))
+                        .append("\",\"liked\":").append(question.isLiked())
+                        .append(",\"likes\":").append(question.getLikes())
+                        .append(",\"comments\":").append(convertCommentsToJson(question.getComments()))
                         .append("},");
             }
             if (!questions.isEmpty()) {
@@ -172,16 +202,17 @@ public class JavaBackend {
         }
     }
 
-    static class Question {
+    public static class Question {
         private String id;
         private String text;
-        private String comment;
+        private boolean liked;
+        private int likes = 0;
         private List<String> comments = new ArrayList<>();
 
-        public Question(String id, String text, String comment) {
+        public Question(String id, String text, boolean liked) {
             this.id = id;
             this.text = text;
-            this.comment = comment;
+            this.liked = liked;
         }
 
         public String getId() {
@@ -192,8 +223,20 @@ public class JavaBackend {
             return text;
         }
 
-        public String getComment() {
-            return comment;
+        public boolean isLiked() {
+            return liked;
+        }
+
+        public int getLikes() {
+            return likes;
+        }
+
+        public void setLiked(boolean liked) {
+            this.liked = liked;
+        }
+
+        public void setLikes(int likes) {
+            this.likes = likes;
         }
 
         public List<String> getComments() {
@@ -202,40 +245,6 @@ public class JavaBackend {
 
         public void addComment(String comment) {
             comments.add(comment);
-        }
-    }
-}
-*/
-
-import com.sun.net.httpserver.HttpServer;
-import java.io.IOException;
-import java.util.logging.ConsoleHandler;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.net.InetSocketAddress;
-
-public class JavaBackend {
-    private static final Logger logger = Logger.getLogger(JavaBackend.class.getName());
-
-    public static void main(String[] args) {
-        try {
-            // Configure the logger
-            ConsoleHandler consoleHandler = new ConsoleHandler();
-            consoleHandler.setLevel(Level.ALL);
-            logger.addHandler(consoleHandler);
-            logger.setLevel(Level.ALL);
-
-            // Create a simple HTTP server on port 7000
-            HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
-
-            // Create a context for the '/api/questions' endpoint
-            server.createContext("/api/questions", new Questions.QuestionsHandler());
-
-            // Start the server
-            server.start();
-            logger.info("Server is running on port 7000");
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error starting the server", e);
         }
     }
 }
