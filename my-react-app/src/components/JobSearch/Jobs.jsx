@@ -1,19 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import ApplicationForm from './JobApplication';
-import RecommendationForm from './JobRecommendation';
-import jobData from './JobSearch';
-import '../Pages/JobSearchPage.css';
+import React, { useState, useEffect } from "react";
+import ApplicationForm from "./JobApplication";
+import RecommendationForm from "./JobRecommendation";
+import "../Pages/JobSearchPage.css";
 
-const JobList = () => {
+const Jobs = () => {
   const [showApplicationForm, setShowApplicationForm] = useState(false);
   const [showRecommendationForm, setShowRecommendationForm] = useState(false);
   const [selectedJobTitle, setSelectedJobTitle] = useState(null);
-  const [jobs, setJobs] = useState(jobData);
+  const [jobs, setJobs] = useState([]);
 
   const handleApplyNowClick = (jobTitle) => {
     setJobs((prevJobs) => {
       return prevJobs.map((job) => {
-        if (job.job_title === jobTitle) {
+        if (job.jobTitle === jobTitle) {
           return {
             ...job,
             showApplicationForm: true,
@@ -34,7 +33,7 @@ const JobList = () => {
   const handleCancelClick = (jobTitle) => {
     setJobs((prevJobs) => {
       return prevJobs.map((job) => {
-        if (job.job_title === jobTitle) {
+        if (job.jobTitle === jobTitle) {
           return {
             ...job,
             showApplicationForm: false,
@@ -49,26 +48,83 @@ const JobList = () => {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchJobs = async () => {
+      try {
+        const response = await fetch("http://localhost:7000/api/jobs");
+        if (response.ok) {
+          const data = await response.json();
+          setJobs(data);
+        } else {
+          console.error(
+            "Failed to fetch jobs:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching jobs:", error.message);
+      }
     };
-    fetchData();
+
+    fetchJobs();
   }, []);
+
+  // Use useEffect to update the jobs state when new jobs are added
+  useEffect(() => {
+    const updateJobs = async () => {
+      try {
+        const response = await fetch("http://localhost:7000/api/jobs");
+        if (response.ok) {
+          const data = await response.json();
+          setJobs(data);
+        } else {
+          console.error(
+            "Failed to fetch jobs:",
+            response.status,
+            response.statusText
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching jobs:", error.message);
+      }
+    };
+
+    // Schedule an update when the showApplicationForm state changes
+    if (showApplicationForm || showRecommendationForm) {
+      updateJobs();
+    }
+  }, [showApplicationForm, showRecommendationForm]);
 
   return (
     <div className="job-list">
-      <h2 className='header'>Job Postings</h2>
+      <h2 className="header">Job Postings</h2>
       {jobs.map((job, index) => (
         <div key={index} className="job">
-          <h3 className="text">{job.job_title}</h3>
-          <p className="other_text">{job.job_description}</p>
-          <button className="submit_text" onClick={() => handleApplyNowClick(job.job_title)}>Apply Now</button>
+          <h3 className="text">{job.jobTitle}</h3>
+          <p className="other_text">{job.jobDescription}</p>
+          <button
+            className="submit_text"
+            onClick={() => handleApplyNowClick(job.jobTitle)}
+          >
+            Apply Now
+          </button>
           <p></p>
-          <button className="submit_text" onClick={() => handleRecommendClick(job.job_title)}>Recommend</button> {/* passing the jobTitle as an argument */}
+          <button
+            className="submit_text"
+            onClick={() => handleRecommendClick(job.jobTitle)}
+          >
+            Recommend
+          </button>{" "}
           {job.showApplicationForm && (
-            <ApplicationForm jobTitle={job.job_title} onCancelClick={() => handleCancelClick(job.job_title)} />
+            <ApplicationForm
+              jobTitle={job.jobTitle}
+              onCancelClick={() => handleCancelClick(job.jobTitle)}
+            />
           )}
-          {showRecommendationForm && selectedJobTitle === job.job_title && (
-            <RecommendationForm onCancelClick={() => handleCancelClick(job.job_title)} />
+          {showRecommendationForm && selectedJobTitle === job.jobTitle && (
+            <RecommendationForm
+              onCancelClick={() => handleCancelClick(job.jobTitle)}
+            />
           )}
           {index !== jobs.length - 1 && <hr />}
         </div>
@@ -77,18 +133,4 @@ const JobList = () => {
   );
 };
 
-export default JobList;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+export default Jobs;

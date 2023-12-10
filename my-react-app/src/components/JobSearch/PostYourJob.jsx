@@ -197,13 +197,7 @@ const JobPostingForm = () => {
       <button type="submit" className="submit" disabled={submitting}>
         {submitting ? "Submitting..." : "Post Job"}
       </button>
-      {success && (
-        <p className="other_text">
-          Your job was submitted successfully! It will be posted on this page
-          once our administrators approve it. Should you wish to make any
-          changes to your Job Post, let us know!
-        </p>
-      )}
+      {success}
       <p></p>
     </form>
   );
