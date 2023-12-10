@@ -4,7 +4,7 @@ import "./QuestionForms.css";
 
 function QuestionForms({ addQuestion }) {
   const [questionText, setQuestionText] = useState("");
-  const [questionCategory, setQuestionCategory] = useState("Other");
+  const [category, setQuestionCategory] = useState("Other");
 
   const handleChange = (event) => {
     const { value, type, checked } = event.target;
@@ -24,7 +24,7 @@ function QuestionForms({ addQuestion }) {
         },
         body: JSON.stringify({
           text: questionText,
-          category: questionCategory,
+          category: category,
         }),
       });
 
@@ -68,25 +68,25 @@ function QuestionForms({ addQuestion }) {
         <p></p>
         <select
           className="text"
-          value={questionCategory}
+          value={category}
           placeholder="Choose your question category"
           onChange={handleChange}
-          name="questionCategory"
+          name="category"
         >
-          <option value="Job Search/Career">Job Search/Career</option>
-          <option value="Immigration">Immigration</option>
-          <option value="Education - College/University">
+          <option value="JOB_SEARCH">Job Search/Career</option>
+          <option value="IMMIGRATION">Immigration</option>
+          <option value="EDUCATION_COLLEGE_UNIVERSITY">
             Education - College/University
           </option>
-          <option value="Education - High School/Daycare">
+          <option value="EDUCATION_HIGH_SCHOOL_DAYCARE">
             {" "}
-            Education - High School/Daycare
+            Education - High School/Daycare{" "}
           </option>
-          <option value="Healthcare">Healthcare</option>
-          <option value="Family/Relationships">Family/Relationships</option>
-          <option value="Real Estate"> Real Estate/ Rent</option>
-          <option value="Entertainment">Entertainment</option>
-          <option value="Other">Other</option>
+          <option value="HEALTHCARE">Healthcare</option>
+          <option value="FAMILY_RELATIONSHIPS">Family/Relationships</option>
+          <option value="REAL_ESTATE"> Real Estate/ Rent</option>
+          <option value="ENTERTAINMENT">Entertainment</option>
+          <option value="OTHER">Other</option>
         </select>
         <p>
           <button className="text-submit" type="submit">

@@ -1,24 +1,61 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Results from "./QuestionResults";
-import Questions from "./Questions.json";
 import QuestionCategory from "./QuestionCategory";
 import "./QuestionSearch.css";
 
 export default function Search() {
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [allQuestions, setAllQuestions] = useState([]);
+  const [filteredQuestions, setFilteredQuestions] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
 
   const handleCategoryChange = (event) => {
     setSelectedCategory(event.target.value);
+    filterQuestions(event.target.value, searchInput);
   };
 
   const handleSearchInput = (event) => {
     setSearchInput(event.target.value);
+    filterQuestions(selectedCategory, event.target.value);
   };
 
-  const filteredQuestions = Questions.filter(
-    (question) => question.question_category === selectedCategory
-  );
+  const filterQuestions = (category, input) => {
+    const filtered = allQuestions.filter(
+      (question) =>
+        (!category ||
+          question.category.toUpperCase() === category.toUpperCase()) &&
+        (!input || question.text.toLowerCase().includes(input.toLowerCase()))
+    );
+    setFilteredQuestions(filtered);
+  };
+
+  const fetchQuestions = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch("http://localhost:7000/api/questions");
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch questions");
+      }
+
+      const questions = await response.json();
+
+      setAllQuestions(questions);
+      filterQuestions(selectedCategory, searchInput);
+      setError(null);
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+      setError("Error fetching questions");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <main className="text">

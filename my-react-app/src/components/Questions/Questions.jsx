@@ -50,9 +50,13 @@ const Questions = () => {
     try {
       console.log("New question received:", newQuestion);
 
+      // Log the category to check if it is available
+      console.log("Category:", newQuestion.category);
+
       const formattedQuestion = {
         id: newQuestion.id,
         text: newQuestion.text,
+        category: newQuestion.category,
         liked: newQuestion.liked || false,
         likes: newQuestion.likes || 0,
         comments: newQuestion.comments || [],
@@ -129,11 +133,11 @@ const Questions = () => {
       <div>
         <h1 className="questions-header">Questions</h1>
         {loading ? (
-          <p>Loading questions...</p>
+          <p classname="text">Loading questions...</p>
         ) : error ? (
-          <p>{error}</p>
+          <p className="text">{error}</p>
         ) : allQuestions.length === 0 ? (
-          <p>No questions available</p>
+          <p className="text">No questions available</p>
         ) : (
           <div className="questions-container">
             {allQuestions.map((question) => (

@@ -1,31 +1,39 @@
-import React from 'react';
-import ResultItem from './QuestionResultItem';
+import React from "react";
+import ResultItem from "./QuestionResultItem";
+import "./Results.css"; // Import a CSS file for Results component styles
 
 export default function Results({ Results, searchInput, selectedCategory }) {
   const hasComments = (comments) => comments.length > 0;
 
   const filteredResults = Results.filter((result) => {
-    if (selectedCategory === '') {
-      return result.question_text.toLowerCase().includes(searchInput.toLowerCase());
+    if (selectedCategory === "") {
+      return result.text.toLowerCase().includes(searchInput.toLowerCase());
     } else {
-      return result.question_category === selectedCategory &&
-        result.question_text.toLowerCase().includes(searchInput.toLowerCase());
+      return (
+        result.category === selectedCategory &&
+        result.text.toLowerCase().includes(searchInput.toLowerCase())
+      );
     }
   });
 
   return (
     <main>
-      <ul>
-        {filteredResults.map((result) => (
-          <ResultItem
-            key={result.id}
-            question_category={result.question_category}
-            question_text={result.question_text}
-            hasComments={hasComments(result.comments)}
-            comments={[result.comments]}
-          />
-        ))}
-      </ul>
+      {filteredResults.length === 0 ? (
+        <p>No results found.</p>
+      ) : (
+        <div className="result-list-container">
+          {filteredResults.map((result) => (
+            <div key={result.id} className="result-item-container">
+              <ResultItem
+                category={result.category}
+                text={result.text}
+                hasComments={hasComments(result.comments)}
+                comments={result.comments}
+              />
+            </div>
+          ))}
+        </div>
+      )}
     </main>
   );
 }

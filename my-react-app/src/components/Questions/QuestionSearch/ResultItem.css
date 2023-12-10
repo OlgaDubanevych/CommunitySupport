@@ -1,0 +1,41 @@
+.result-item {
+  list-style-type: none;
+  border-bottom: 1px solid #ccc;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.result-category,
+.result-text,
+.result-comments,
+.result-comments-list {
+  margin-bottom: 5px;
+}
+
+.result-text {
+  color: black;
+  font: 20px;
+  font-weight: bolder;
+}
+
+.result-comments {
+  margin-bottom: 5px;
+  color: black;
+  font: 14px;
+  font-weight: bolder;
+}
+
+.has-comments {
+  color: green;
+}
+
+.no-comments {
+  color: #be212f;
+}
+
+.comment {
+  margin-bottom: 5px;
+  color: black;
+  font: 14px;
+  font-weight: bold;
+}

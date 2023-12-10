@@ -1,4 +1,5 @@
 package backend;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
@@ -53,27 +54,32 @@ public class Questions {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
-        
-            // Use regex to extract the text and comment properties
+
+            // Use regex to extract the text, category, and comment properties
             Pattern textPattern = Pattern.compile("\"text\":\"(.*?)\"");
+            Pattern categoryPattern = Pattern.compile("\"category\":\"(.*?)\"");
             Pattern commentPattern = Pattern.compile("\"comment\":\"(.*?)\"");
             Matcher textMatcher = textPattern.matcher(requestBody);
             Matcher commentMatcher = commentPattern.matcher(requestBody);
-        
-            if (textMatcher.find()) {
+            Matcher categoryMatcher = categoryPattern.matcher(requestBody);
+
+            if (textMatcher.find() && categoryMatcher.find()) {
                 String text = textMatcher.group(1);
+                String categoryString = categoryMatcher.group(1);
+                QuestionCategory category = QuestionCategory.valueOf(categoryString.toUpperCase());
+
                 String comment = commentMatcher.find() ? commentMatcher.group(1) : "";
-        
-                // Create a new question with the provided text
-                Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, false); // Set liked to false initially
-        
+
+                // Create a new question with the provided text, category, and comment
+                Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, category, false);
+
                 // Add the comment only if it is present
                 if (!comment.isEmpty()) {
                     newQuestion.addComment(comment);
                 }
-        
+
                 questions.add(newQuestion);
-        
+
                 // Send back the updated list of questions
                 sendResponse(exchange, 200, convertQuestionsToJson());
             } else {
@@ -81,7 +87,7 @@ public class Questions {
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
-        
+
         private void handleCommentPostRequest(HttpExchange exchange, String questionId) throws IOException {
             // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
@@ -167,7 +173,8 @@ public class Questions {
                         .append("\",\"text\":\"").append(question.getText())
                         .append("\",\"liked\":").append(question.isLiked())
                         .append(",\"likes\":").append(question.getLikes())
-                        .append(",\"comments\":").append(convertCommentsToJson(question.getComments()))
+                        .append(",\"category\":\"").append(question.getCategory())
+                        .append("\",\"comments\":").append(convertCommentsToJson(question.getComments()))
                         .append("},");
             }
             if (!questions.isEmpty()) {
@@ -208,11 +215,13 @@ public class Questions {
         private boolean liked;
         private int likes = 0;
         private List<String> comments = new ArrayList<>();
+        private QuestionCategory category; // Use the enum for category
 
-        public Question(String id, String text, boolean liked) {
+        public Question(String id, String text, QuestionCategory category, boolean liked) {
             this.id = id;
             this.text = text;
             this.liked = liked;
+            this.category = category;
         }
 
         public String getId() {
@@ -231,6 +240,10 @@ public class Questions {
             return likes;
         }
 
+        public QuestionCategory getCategory() {
+            return category;
+        }
+
         public void setLiked(boolean liked) {
             this.liked = liked;
         }
@@ -247,4 +260,17 @@ public class Questions {
             comments.add(comment);
         }
     }
+
+    public enum QuestionCategory {
+        JOB_SEARCH,
+        IMMIGRATION,
+        EDUCATION_COLLEGE_UNIVERSITY,
+        EDUCATION_HIGH_SCHOOL_DAYCARE,
+        HEALTHCARE,
+        FAMILY_RELATIONSHIPS,
+        REAL_ESTATE,
+        ENTERTAINMENT,
+        OTHER
+    }
+    
 }

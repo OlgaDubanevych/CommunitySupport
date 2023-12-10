@@ -22,7 +22,7 @@ public class JavaBackend {
 
             // Create a context for the '/api/questions' endpoint
             server.createContext("/api/questions", new Questions.QuestionsHandler());
-
+            server.createContext("/api/jobs", new Jobs.JobsHandler());
             // Start the server
             server.start();
             logger.info("Server is running on port 7000");
