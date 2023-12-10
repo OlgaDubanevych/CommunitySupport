@@ -186,7 +186,7 @@ public class Jobs {
         }
     }
 
-    private static class Job {
+     private static class Job {
         private String jobTitle;
         private String jobDescription;
         private boolean showApplicationForm;

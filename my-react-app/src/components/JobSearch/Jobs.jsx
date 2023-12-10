@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import ApplicationForm from "./JobApplication";
 import RecommendationForm from "./JobRecommendation";
 import "../Pages/JobSearchPage.css";
+import JobPostingForm from "./PostYourJob.jsx";
 
 const Jobs = () => {
   const [showApplicationForm, setShowApplicationForm] = useState(false);
@@ -47,29 +48,28 @@ const Jobs = () => {
     setShowRecommendationForm(false);
   };
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      try {
-        const response = await fetch("http://localhost:7000/api/jobs");
-        if (response.ok) {
-          const data = await response.json();
-          setJobs(data);
-        } else {
-          console.error(
-            "Failed to fetch jobs:",
-            response.status,
-            response.statusText
-          );
-        }
-      } catch (error) {
-        console.error("Error fetching jobs:", error.message);
+  const fetchJobs = async () => {
+    try {
+      const response = await fetch("http://localhost:7000/api/jobs");
+      if (response.ok) {
+        const data = await response.json();
+        setJobs(data);
+      } else {
+        console.error(
+          "Failed to fetch jobs:",
+          response.status,
+          response.statusText
+        );
       }
-    };
+    } catch (error) {
+      console.error("Error fetching jobs:", error.message);
+    }
+  };
 
+  useEffect(() => {
     fetchJobs();
   }, []);
 
-  // Use useEffect to update the jobs state when new jobs are added
   useEffect(() => {
     const updateJobs = async () => {
       try {
@@ -89,11 +89,15 @@ const Jobs = () => {
       }
     };
 
-    // Schedule an update when the showApplicationForm state changes
     if (showApplicationForm || showRecommendationForm) {
       updateJobs();
     }
   }, [showApplicationForm, showRecommendationForm]);
+
+  const handleJobPosted = () => {
+    // Fetch the updated list of jobs after a new job is posted
+    fetchJobs();
+  };
 
   return (
     <div className="job-list">
@@ -129,6 +133,9 @@ const Jobs = () => {
           {index !== jobs.length - 1 && <hr />}
         </div>
       ))}
+
+      {/* Render JobPostingForm component */}
+      <JobPostingForm onJobPosted={handleJobPosted} />
     </div>
   );
 };

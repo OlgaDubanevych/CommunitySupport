@@ -1,15 +1,25 @@
-import React, { useState } from 'react';
-import '../Pages/JobSearchPage.css'
-
+import React, { useState } from "react";
+import "../Pages/JobSearchPage.css";
 
 const RecommendationForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    // Create a mailto link with subject and body
+    const subject = encodeURIComponent("Job Recommendation");
+    const body = encodeURIComponent(
+      `Dear Hiring Manager,\n\nI would like to recommend the job for your consideration.\n\nSincerely,\n${firstName} ${lastName}`
+    );
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    // Open a new window or tab with the mailto link
+    window.open(mailtoLink);
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
@@ -25,7 +35,9 @@ const RecommendationForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-field">
             <p></p>
-            <label htmlFor="firstName" className="text">First Name:&nbsp;</label>
+            <label htmlFor="firstName" className="text">
+              First Name:&nbsp;
+            </label>
             <input
               type="text"
               id="firstName"
@@ -36,7 +48,9 @@ const RecommendationForm = () => {
           </div>
           <p></p>
           <div className="form-field">
-            <label htmlFor="lastName" className="text">Last Name: &nbsp;</label>
+            <label htmlFor="lastName" className="text">
+              Last Name: &nbsp;
+            </label>
             <input
               type="text"
               id="lastName"
@@ -47,7 +61,9 @@ const RecommendationForm = () => {
           </div>
           <p></p>
           <div className="form-field">
-            <label htmlFor="email" className="text">Email: &nbsp;</label>
+            <label htmlFor="email" className="text">
+              Email: &nbsp;
+            </label>
             <input
               type="email"
               id="email"
@@ -57,10 +73,13 @@ const RecommendationForm = () => {
             />
           </div>
           <p></p>
-          <button type="submit" className="submit">Submit</button>
+          <button type="submit" className="submit">
+            Submit
+          </button>
         </form>
       )}
     </div>
   );
 };
-export default RecommendationForm ;
+
+export default RecommendationForm;

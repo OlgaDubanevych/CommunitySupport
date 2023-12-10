@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../Pages/JobSearchPage.css";
 
-const JobPostingForm = () => {
+const JobPostingForm = ({ onJobPosted }) => {
   const [jobPostingDate, setJobPostingDate] = useState("");
   const [expiryDate, setExpiryDate] = useState("");
   const [companyName, setCompanyName] = useState("");
@@ -45,6 +45,8 @@ const JobPostingForm = () => {
 
       if (response.ok) {
         setSuccess(true);
+
+        // Clear form fields
         setJobPostingDate("");
         setExpiryDate("");
         setCompanyName("");
@@ -56,6 +58,9 @@ const JobPostingForm = () => {
         setLastName("");
         setEmail("");
         setPhone("");
+
+        // Notify parent component (Jobs) about the new job
+        onJobPosted();
 
         setTimeout(() => {
           setSuccess(false);
@@ -197,7 +202,7 @@ const JobPostingForm = () => {
       <button type="submit" className="submit" disabled={submitting}>
         {submitting ? "Submitting..." : "Post Job"}
       </button>
-      {success}
+      {success && <p>Job posted successfully!</p>}
       <p></p>
     </form>
   );
