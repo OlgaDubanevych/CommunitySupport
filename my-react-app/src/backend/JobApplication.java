@@ -5,22 +5,33 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.LinkedHashMap;
 
 public class JobApplication {
 
-    private static final List<JobApplicationData> jobApplications = new ArrayList<>();
-    private static int applicationIdCounter = 1;
+    private static final List<Map<String, String>> jobApplications = new ArrayList<>();
+
+    public static void main(String[] args) throws IOException {
+        com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(7000), 0);
+        server.createContext("/api/applications", new ApplicationsHandler());
+        server.setExecutor(null);
+        server.start();
+        System.out.println("Server is running on port 7000");
+    }
 
     public static class ApplicationsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // Enable CORS
             enableCORS(exchange);
 
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
-                // For preflight requests, respond successfully
                 exchange.sendResponseHeaders(200, -1);
                 return;
             }
@@ -37,59 +48,74 @@ public class JobApplication {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Assuming the JSON structure for a job application
-            // Modify this based on the actual structure of your application form
-            // (code omitted for brevity)
+            // Use regex to extract job application properties
+            Map<String, String> applicationData = new HashMap<>();
+            applicationData.put("jobTitle", extractValue(requestBody, "jobTitle"));
+            applicationData.put("firstName", extractValue(requestBody, "firstName"));
+            applicationData.put("lastName", extractValue(requestBody, "lastName"));
+            applicationData.put("email", extractValue(requestBody, "email"));
+            applicationData.put("phone", extractValue(requestBody, "phone"));
+            applicationData.put("resume", extractValue(requestBody, "resume"));
+            applicationData.put("coverLetter", extractValue(requestBody, "coverLetter"));
 
-            // You can save the application details, send emails, etc.
-            // For this example, we'll just add the application to the list
-            jobApplications.add(new JobApplicationData(String.valueOf(applicationIdCounter++), requestBody));
+            // Process the received data or save it to a database
+            jobApplications.add(applicationData);
 
             sendResponse(exchange, 200, "Application submitted successfully!");
         }
 
+        private String extractValue(String requestBody, String key) {
+            Pattern pattern = Pattern.compile("\"" + key + "\":\"(.*?)\"");
+            Matcher matcher = pattern.matcher(requestBody);
+            return matcher.find() ? matcher.group(1) : "";
+        }
+
         private void handleGetRequest(HttpExchange exchange) throws IOException {
+            // Send back the list of job applications
             sendResponse(exchange, 200, convertApplicationsToJson());
+        }
+
+        private void enableCORS(HttpExchange exchange) {
+            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type");
         }
 
         private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
             exchange.sendResponseHeaders(statusCode, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
         }
 
         private String convertApplicationsToJson() {
+            // Convert the list of job applications to JSON-like format
             StringBuilder json = new StringBuilder("[");
-            for (JobApplicationData application : jobApplications) {
-                json.append(application.toJson()).append(",");
+            for (Map<String, String> application : jobApplications) {
+                // Customize the order of properties based on your desired sequence
+                String[] orderedProperties = {"jobTitle", "firstName", "lastName", "email", "phone", "resume", "coverLetter"};
+
+                // Use LinkedHashMap to maintain the order of entries
+                Map<String, String> orderedApplication = new LinkedHashMap<>();
+                for (String property : orderedProperties) {
+                    orderedApplication.put(property, application.get(property));
+                }
+
+                // Construct JSON response
+                json.append("{");
+                for (Map.Entry<String, String> entry : orderedApplication.entrySet()) {
+                    json.append("\"").append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\",");
+                }
+                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.append("},");
             }
             if (!jobApplications.isEmpty()) {
-                json.setLength(json.length() - 1);
+                json.setLength(json.length() - 1); // Remove the trailing comma
             }
             json.append("]");
 
             return json.toString();
         }
 
-        private void enableCORS(HttpExchange exchange) {
-            exchange.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-            exchange.getResponseHeaders().add("Access-Control-Allow-Headers", "Content-Type,Authorization");
-        }
-    }
-
-    private static class JobApplicationData {
-        private String id;
-        private String data; // This could be the entire application form data
-
-        public JobApplicationData(String id, String data) {
-            this.id = id;
-            this.data = data;
-        }
-
-        public String toJson() {
-            return String.format("{\"id\":\"%s\",\"data\":\"%s\"}", id, data);
-        }
     }
 }

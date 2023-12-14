@@ -1,18 +1,31 @@
 package backend;
-import com.sun.net.httpserver.Headers;
+
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import com.sun.net.httpserver.Headers;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Jobs {
+
     private static final List<JobPost> jobPosts = new ArrayList<>();
     private static int jobIdCounter = 1;
+
+    public static void main(String[] args) throws IOException {
+        com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(7000), 0);
+        server.createContext("/api/jobs", new JobsHandler());
+        server.setExecutor(null);
+        server.start();
+        System.out.println("Server is running on port 7000");
+    }
 
     public static class JobsHandler implements HttpHandler {
         @Override
@@ -96,27 +109,67 @@ public class Jobs {
         }
 
         private void handleGetRequest(HttpExchange exchange) throws IOException {
-            sendResponse(exchange, 200, convertJobPostsToJson());
+            // Extract the search term from the query parameters
+            String searchTerm = "";
+            String query = exchange.getRequestURI().getQuery();
+               if (query != null && query.contains("searchTerm")) {
+                searchTerm = query.split("=")[1];
+}
+
+
+
+            if (searchTerm != null) {
+                // Split the search term into words
+                String[] searchWords = searchTerm.trim().toLowerCase().split("\\s+");
+
+                // Filter jobs based on the search term (case-insensitive and partial match)
+                List<JobPost> filteredJobs = jobPosts.stream()
+                        .filter(jobPost -> {
+                            String lowerCaseTitle = jobPost.getJobTitle().toLowerCase();
+                            String lowerCaseCompany = jobPost.getCompanyName().toLowerCase();
+                            String lowerCaseLocation = jobPost.getLocation().toLowerCase();
+
+                            // Check if any of the search words is present in job title, company name, or location
+                            return Arrays.stream(searchWords)
+                                    .anyMatch(word ->
+                                            lowerCaseTitle.contains(word) ||
+                                                    lowerCaseCompany.contains(word) ||
+                                                    lowerCaseLocation.contains(word)
+                                    );
+                        })
+                        .collect(Collectors.toList());
+
+                // Send back the list of filtered job posts
+                sendResponse(exchange, 200, convertJobPostsToJson(filteredJobs));
+            } else {
+                // Send back the list of all job posts if no search term is provided
+                sendResponse(exchange, 200, convertJobPostsToJson());
+            }
         }
 
         private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
             exchange.sendResponseHeaders(statusCode, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+            try (OutputStream os = exchange.getResponseBody()) {
+                os.write(response.getBytes());
+            }
         }
 
-        private String convertJobPostsToJson() {
+        private String convertJobPostsToJson(List<JobPost> jobPosts) {
+            // Convert the list of job posts to JSON-like format
             StringBuilder json = new StringBuilder("[");
             for (JobPost jobPost : jobPosts) {
                 json.append(jobPost.toJson()).append(",");
             }
             if (!jobPosts.isEmpty()) {
-                json.setLength(json.length() - 1);
+                json.setLength(json.length() - 1); // Remove the trailing comma
             }
             json.append("]");
 
             return json.toString();
+        }
+
+        private String convertJobPostsToJson() {
+            return convertJobPostsToJson(jobPosts);
         }
     }
 
@@ -152,56 +205,17 @@ public class Jobs {
         public String toJson() {
             return String.format("{\"id\":\"%s\",\"jobPostingDate\":\"%s\",\"expiryDate\":\"%s\",\"companyName\":\"%s\",\"jobTitle\":\"%s\",\"jobDescription\":\"%s\",\"location\":\"%s\",\"salary\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\",\"email\":\"%s\",\"phone\":\"%s\"}", id, jobPostingDate, expiryDate, companyName, jobTitle, jobDescription, location, salary, firstName, lastName, email, phone);
         }
-    }
-    private static final List<Job> jobs = new ArrayList<>();
 
-    public static class JobsHandlerJobs implements HttpHandler {
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
-            if ("GET".equals(exchange.getRequestMethod())) {
-                sendResponse(exchange, 200, convertJobsToJson());
-            } else {
-                sendResponse(exchange, 405, "Method Not Allowed");
-            }
+        public String getJobTitle() {
+            return jobTitle;
         }
 
-        private void sendResponse(HttpExchange exchange, int statusCode, String response) throws IOException {
-            exchange.sendResponseHeaders(statusCode, response.length());
-            OutputStream os = exchange.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
+        public String getCompanyName() {
+            return companyName;
         }
 
-        private String convertJobsToJson() {
-            StringBuilder json = new StringBuilder("[");
-            for (Job job : jobs) {
-                json.append(job.toJson()).append(",");
-            }
-            if (!jobs.isEmpty()) {
-                json.setLength(json.length() - 1);
-            }
-            json.append("]");
-
-            return json.toString();
+        public String getLocation() {
+            return location;
         }
     }
-
-     private static class Job {
-        private String jobTitle;
-        private String jobDescription;
-        private boolean showApplicationForm;
-        private boolean showRecommendationForm;
-    
-        public Job(String jobTitle, String jobDescription, boolean showApplicationForm, boolean showRecommendationForm) {
-            this.jobTitle = jobTitle;
-            this.jobDescription = jobDescription;
-            this.showApplicationForm = showApplicationForm;
-            this.showRecommendationForm = showRecommendationForm;
-        }
-    
-        public String toJson() {
-            return String.format("{\"jobTitle\":\"%s\",\"jobDescription\":\"%s\",\"showApplicationForm\":%s,\"showRecommendationForm\":%s}", jobTitle, jobDescription, showApplicationForm, showRecommendationForm);
-        }
-    }
-    
 }

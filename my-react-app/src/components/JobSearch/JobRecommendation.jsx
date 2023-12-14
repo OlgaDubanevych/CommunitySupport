@@ -13,7 +13,7 @@ const RecommendationForm = () => {
     // Create a mailto link with subject and body
     const subject = encodeURIComponent("Job Recommendation");
     const body = encodeURIComponent(
-      `Dear Hiring Manager,\n\nI would like to recommend the job for your consideration.\n\nSincerely,\n${firstName} ${lastName}`
+      `I would like to recommend the job for your consideration.\n\nSincerely,\n${firstName} ${lastName}`
     );
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 

@@ -1,38 +1,35 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import "../Pages/JobSearchPage.css";
 
 const ApplicationForm = ({ jobTitle, onCancelClick }) => {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const resumeRef = useRef(null);
-  const coverLetterRef = useRef(null);
+  const initialFormData = {
+    jobTitle: jobTitle,
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    resume: "",
+    coverLetter: "",
+  };
+
+  const [formData, setFormData] = useState({ ...initialFormData });
   const [showMessage, setShowMessage] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("jobTitle", jobTitle);
-    formData.append("firstName", firstName);
-    formData.append("lastName", lastName);
-    formData.append("email", email);
-    formData.append("phone", phone);
-    formData.append("resume", resumeRef.current);
-
-    // Check if coverLetterRef.current exists before appending to avoid errors
-    coverLetterRef.current &&
-      formData.append("coverLetter", coverLetterRef.current);
-
     try {
       const response = await fetch("http://localhost:7000/api/applications", {
         method: "POST",
-        body: formData,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
         setShowMessage(true);
+        setFormData({ ...initialFormData }); // Clear form fields
         setTimeout(() => {
           setShowMessage(false);
         }, 4000);
@@ -48,28 +45,12 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
     }
   };
 
-  const handleFirstNameChange = (e) => {
-    setFirstName(e.target.value);
-  };
-
-  const handleLastNameChange = (e) => {
-    setLastName(e.target.value);
-  };
-
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePhoneChange = (e) => {
-    setPhone(e.target.value);
-  };
-
-  const handleResumeChange = (e) => {
-    resumeRef.current = e.target.files[0];
-  };
-
-  const handleCoverLetterChange = (e) => {
-    coverLetterRef.current = e.target.files[0];
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   return (
@@ -81,8 +62,9 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             First Name:&nbsp;
             <input
               type="text"
-              value={firstName}
-              onChange={handleFirstNameChange}
+              name="firstName"
+              value={formData.firstName}
+              onChange={handleChange}
               required
             />
           </label>
@@ -91,8 +73,9 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             Last Name:&nbsp;
             <input
               type="text"
-              value={lastName}
-              onChange={handleLastNameChange}
+              name="lastName"
+              value={formData.lastName}
+              onChange={handleChange}
               required
             />
           </label>
@@ -101,8 +84,9 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             Email:&nbsp;
             <input
               type="email"
-              value={email}
-              onChange={handleEmailChange}
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
               required
             />
           </label>
@@ -111,28 +95,29 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             Phone:&nbsp;
             <input
               type="tel"
-              value={phone}
-              onChange={handlePhoneChange}
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
               required
             />
           </label>
           <br />
           <label>
-            Resume Document Upload (mandatory):&nbsp;
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleResumeChange}
+            Resume Text (mandatory):&nbsp;
+            <textarea
+              name="resume"
+              value={formData.resume}
+              onChange={handleChange}
               required
             />
           </label>
           <br />
           <label>
-            Cover Letter (optional):&nbsp;
-            <input
-              type="file"
-              accept=".pdf,.doc,.docx"
-              onChange={handleCoverLetterChange}
+            Cover Letter Text (optional):&nbsp;
+            <textarea
+              name="coverLetter"
+              value={formData.coverLetter}
+              onChange={handleChange}
             />
           </label>
           <br />
