@@ -1,31 +1,48 @@
-import React, { useState } from 'react';
-import '../Pages/DonationsPage.css'
+// DonationRecommendationForm.jsx
+import React, { useState } from "react";
+import "../Pages/DonationsPage.css";
 
-
-const RecommendationForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
+const DonationRecommendationForm = ({
+  donation,
+  onRecommendationSubmit,
+  onCancelClick,
+}) => {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Create a mailto link with subject and body
+    const subject = encodeURIComponent("Donation Recommendation");
+    const body = encodeURIComponent(
+      `I would like to recommend this donation for your consideration.\n\nItem Name: ${donation.itemName}\nDescription: ${donation.itemDescription}\n\nSincerely,\n${firstName} ${lastName}`
+    );
+    const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
+
+    // Open a new window or tab with the mailto link
+    window.open(mailtoLink);
+
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
+      onCancelClick(); // Close the recommendation form
     }, 4000);
   };
 
   return (
     <div className="recommendation-form-container">
-      <h4 className="header">Recommend a donation:</h4>
+      <h4 className="recommendation-header text">Recommend this Donation:</h4>
       {submitted ? (
-        <p className="other_text">Your recommendation was sent!</p>
+        <p className="success-message text">Your recommendation was sent!</p>
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="form-field">
-            <p></p>
-            <label htmlFor="firstName" className="text">First Name: &nbsp; </label>
+            <label htmlFor="firstName" className="text">
+              First Name:&nbsp;
+            </label>
             <input
               type="text"
               id="firstName"
@@ -34,9 +51,10 @@ const RecommendationForm = () => {
               required
             />
           </div>
-          <p></p>
           <div className="form-field">
-            <label htmlFor="lastName" className="text">Last Name: &nbsp; </label>
+            <label htmlFor="lastName" className="text">
+              Last Name: &nbsp;
+            </label>
             <input
               type="text"
               id="lastName"
@@ -45,9 +63,10 @@ const RecommendationForm = () => {
               required
             />
           </div>
-          <p></p>
           <div className="form-field">
-            <label htmlFor="email" className="text">Email: &nbsp; </label>
+            <label htmlFor="email" className="text">
+              Email: &nbsp;
+            </label>
             <input
               type="email"
               id="email"
@@ -56,15 +75,27 @@ const RecommendationForm = () => {
               required
             />
           </div>
-          <p></p>
-          <button type="submit" className="submit">Submit</button>
+          {/* Display item name and description from the donation object */}
+          <div className="form-field">
+            <p className="text">
+              Item Name: <strong>{donation.itemName}</strong>
+            </p>
+          </div>
+          <div className="form-field">
+            <p className="text">
+              Item Description: <strong>{donation.itemDescription}</strong>
+            </p>
+          </div>
+          <button type="submit" className="submit">
+            Submit
+          </button>
+          <button type="button" onClick={onCancelClick} className="cancel">
+            Cancel
+          </button>
         </form>
       )}
     </div>
   );
 };
-export default RecommendationForm ;
 
-
-
-
+export default DonationRecommendationForm;

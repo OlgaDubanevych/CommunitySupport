@@ -25,6 +25,7 @@ public class JavaBackend {
             server.createContext("/api/questions", new Questions.QuestionsHandler());
             server.createContext("/api/jobs", new Jobs.JobsHandler());
             server.createContext("/api/applications", new JobApplication.ApplicationsHandler());
+            server.createContext("/api/donations", new Donations.DonationsHandler());
 
             // Start the server
             server.setExecutor(null);
