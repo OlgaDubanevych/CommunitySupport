@@ -40,7 +40,7 @@ const DonationRecommendationForm = ({
         <form onSubmit={handleSubmit}>
           <div className="form-field">
             <label htmlFor="firstName" className="text">
-              First Name:&nbsp;
+              Your First Name:&nbsp;
             </label>
             <input
               type="text"
@@ -52,7 +52,7 @@ const DonationRecommendationForm = ({
           </div>
           <div className="form-field">
             <label htmlFor="lastName" className="text">
-              Last Name: &nbsp;
+              Your Last Name: &nbsp;
             </label>
             <input
               type="text"
@@ -64,7 +64,8 @@ const DonationRecommendationForm = ({
           </div>
           <div className="form-field">
             <label htmlFor="email" className="text">
-              Email: &nbsp;
+              To recommend this donation to a specific person, kindly enter
+              their email address: &nbsp;
             </label>
             <input
               type="email"

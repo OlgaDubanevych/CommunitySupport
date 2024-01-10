@@ -1,27 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../Pages/DonationsPage.css";
 
 const MessageForm = ({
   donation,
-  donorInfo,
+  donorEmail,
   onMessageSubmit,
   onCancelClick,
 }) => {
   const [formData, setFormData] = useState({
-    email: donorInfo.email,
+    email: donorEmail || "N/A",
     itemName: donation.itemName,
     itemDescription: donation.itemDescription,
     message: "",
   });
-
-  useEffect(() => {
-    setFormData((prevData) => ({
-      ...prevData,
-      email: donorInfo.email,
-      itemName: donation.itemName,
-      itemDescription: donation.itemDescription,
-    }));
-  }, [donorInfo, donation]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,53 +21,35 @@ const MessageForm = ({
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Email:</label>
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={() => {}}
-        disabled
-        required
-      />
+    <div>
+      <div>
+        <strong>Item Name:</strong> {formData.itemName}
+      </div>
 
-      <br />
-      <label>Item Name:</label>
-      <input
-        type="text"
-        name="itemName"
-        value={formData.itemName}
-        onChange={() => {}}
-        disabled
-        required
-      />
+      <div>
+        <strong>Item Description:</strong> {formData.itemDescription}
+      </div>
 
-      <br />
-      <label>Item Description:</label>
-      <textarea
-        name="itemDescription"
-        value={formData.itemDescription}
-        onChange={() => {}}
-        disabled
-        required
-      />
+      <form onSubmit={handleSubmit}>
+        <label> Your Message:</label>
+        <p></p>
+        <textarea
+          name="message"
+          value={formData.message}
+          onChange={(e) =>
+            setFormData({ ...formData, message: e.target.value })
+          }
+          required
+        />
 
-      <br />
-      <label>Message:</label>
-      <textarea
-        name="message"
-        value={formData.message}
-        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-        required
-      />
-
-      <br />
-      <button type="submit">Send Message</button>
-      <button type="button" onClick={onCancelClick}>
-        Cancel
-      </button>
-    </form>
+        <br />
+        <p></p>
+        <button type="submit">Send Message</button>
+        <button type="button" onClick={onCancelClick}>
+          Cancel
+        </button>
+      </form>
+    </div>
   );
 };
 

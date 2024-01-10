@@ -1,88 +1,106 @@
-import React, { useState, useEffect } from 'react';
-import '../Pages/AboutUs.css'
+import React, { useState } from "react";
+import "../Pages/AboutUs.css";
 
 const StoryForm = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [story, setStory] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [story, setStory] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted!');
-    setSubmitted(true);
-  };
 
-  useEffect(() => {
-    if (submitted) {
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 4000);
+    const successStoryData = {
+      firstName,
+      lastName,
+      email,
+      story,
+    };
+
+    try {
+      const response = await fetch("http://localhost:7000/api/stories", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(successStoryData),
+      });
+
+      if (response.ok) {
+        console.log("Success story submitted!");
+        setSubmitted(true);
+
+        // Reset form fields after successful submission
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setStory("");
+
+        // Set a timeout to clear the "Thank you" message after 5 seconds
+        setTimeout(() => {
+          setSubmitted(false);
+        }, 4000);
+      } else {
+        console.error("Failed to submit success story.");
+      }
+    } catch (error) {
+      console.error("Error submitting success story:", error);
     }
-  }, [submitted]);
+  };
 
   return (
     <form onSubmit={handleSubmit}>
-        <h1 className='header'>Share Your Success Story</h1>
-        <div className='input-text'>
-          <label htmlFor="firstName">First Name:</label>
-          <input
-            className='input-text'
-            type="text"
-            id="firstName"
-            name="firstName"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-        </div>
-        <br/>
-    
-        <div className='input-text'>
-          <label htmlFor="lastName">Last Name:</label>
-          <input
-            className='input-text'
-            type="text"
-            id="lastName"
-            name="lastName"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </div>
-        <br/>
-
-        <div className='input-text'>
-          <label htmlFor="lastName"> Your Email:</label>
-          <input
-            className='input-text'
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-        </div>
-        <br/>
-        <div className='input-text'>
-          <label htmlFor="story">Your Story:</label>
-          <textarea
-            className='input-text'
-            id="story"
-            name="story"
-            value={story}
-            onChange={(e) => setStory(e.target.value)}
-            required
-          />
-        </div>
-        <br/>
-        <p></p>
-        <button type="submit" className="submit">Submit</button>
-        <p></p>
-      
-        {submitted && <p className = "other_text">Thank you for sharing your story. It will be posted on this page shortly.</p>}
+      <h1 className="header">Share Your Success Story</h1>
+      <div className="input-text">
+        <label htmlFor="firstName">First Name:</label>
+        <input
+          type="text"
+          id="firstName"
+          name="firstName"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="input-text">
+        <label htmlFor="lastName">Last Name:</label>
+        <input
+          type="text"
+          id="lastName"
+          name="lastName"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+          required
+        />
+      </div>
+      <div className="input-text">
+        <label htmlFor="email">Your Email:</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+      </div>
+      <div className="input-text">
+        <label htmlFor="story">Your Story:</label>
+        <textarea
+          id="story"
+          name="story"
+          value={story}
+          onChange={(e) => setStory(e.target.value)}
+          required
+        />
+      </div>
+      <button type="submit" className="submit">
+        Submit
+      </button>
+      {submitted && (
+        <p className="other_text">Thank you for sharing your story!</p>
+      )}
     </form>
   );
 };

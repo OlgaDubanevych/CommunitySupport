@@ -1,14 +1,18 @@
-// DonationForm.js
 import React, { useState } from "react";
+import CategoriesOfDonations from "./CategoriesOfDonations"; // Import the CategoriesOfDonations component
 import "./Donations.css";
-import DonationCategory from "./DonationCategory"; // Import the correct DonationCategory component
 
 function DonationForm() {
   const Category = {
-    CLOTHING: "CLOTHING",
-    ELECTRONICS: "ELECTRONICS",
-    FURNITURE: "FURNITURE",
+    APPLIANCES: "APPLIANCES",
+    BABY_PRODUCTS: "BABY_PRODUCTS",
     BOOKS: "BOOKS",
+    CLOTHES: "CLOTHES",
+    ELECTRONICS: "ELECTRONICS",
+    FOOD: "FOOD",
+    FURNITURE: "FURNITURE",
+    KITCHEN_UTILITIES: "KITCHEN_UTILITIES",
+    TOYS_AND_GAMES: "TOYS_AND_GAMES",
     OTHER: "OTHER",
   };
 
@@ -40,7 +44,7 @@ function DonationForm() {
     };
 
     try {
-      console.log("Sending data to backend:", donationData); // Log what you are sending to the backend
+      console.log("Sending data to backend:", donationData);
 
       const response = await fetch("http://localhost:7000/api/donations", {
         method: "POST",
@@ -53,7 +57,7 @@ function DonationForm() {
       // Reset form fields after successful submission
       if (response.ok) {
         const responseData = await response.json();
-        console.log("Received data from backend:", responseData); // Log what you received from the backend
+        console.log("Received data from backend:", responseData);
 
         setTimeout(() => {
           setIsSubmitted(false);
@@ -141,8 +145,8 @@ function DonationForm() {
           </label>
         </div>
         <div className="form-group">
-          <DonationCategory
-            category={category}
+          <CategoriesOfDonations
+            donationCategory={category}
             onCategoryChange={handleCategoryChange}
           />
         </div>
@@ -151,9 +155,6 @@ function DonationForm() {
             Submit
           </button>
         </div>
-        {isSubmitted && (
-          <p>Your submission is under review and will be posted shortly.</p>
-        )}
       </form>
     </div>
   );

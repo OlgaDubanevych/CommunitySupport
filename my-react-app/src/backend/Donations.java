@@ -20,10 +20,15 @@ public class Donations {
     private static int donationIdCounter = 1;
 
     public enum Category {
-        CLOTHING,
-        ELECTRONICS,
-        FURNITURE,
+        APPLIANCES,
+        BABY_PRODUCTS,
         BOOKS,
+        CLOTHES,
+        ELECTRONICS,
+        FOOD,
+        FURNITURE,
+        KITCHEN_UTILITIES,
+        TOYS_AND_GAMES,
         OTHER
     }
 

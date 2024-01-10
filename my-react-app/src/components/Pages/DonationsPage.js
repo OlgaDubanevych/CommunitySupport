@@ -1,6 +1,6 @@
 import React from "react";
 import DonationForm from "../Donations/DonationForm";
-import DonationCategory from "../Donations/DonationSearch/DonationCategory";
+import DonationSearch from "../Donations/DonationSearch";
 import Donations from "../Donations/Donations";
 import Intro from "../Donations/Text";
 import DonationsImage2 from "../Donations/Image2";
@@ -11,7 +11,7 @@ const DonationsPage = () => {
     <div className="content">
       <Intro />
       <Donations />
-      <DonationCategory />
+      <DonationSearch />
       <br />
       <p></p>
       <DonationsImage1 />

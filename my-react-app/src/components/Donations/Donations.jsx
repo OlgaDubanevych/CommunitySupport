@@ -10,6 +10,60 @@ const Donations = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const fetchDonations = async () => {
+    try {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      const timeoutId = setTimeout(() => controller.abort(), 180000); // Abort fetch after 5 seconds
+
+      const response = await fetch("http://localhost:7000/api/donations", {
+        signal,
+      });
+
+      clearTimeout(timeoutId); // Clear the timeout if the fetch is successful
+
+      if (response.ok) {
+        const data = await response.json();
+        setDonations(data);
+
+        setShowRecommendationForm((prev) => {
+          const newFormState = { ...prev };
+          data.forEach((donation) => {
+            if (prev[donation.id] === undefined) {
+              newFormState[donation.id] = false;
+            }
+          });
+          return newFormState;
+        });
+
+        setShowMessageForm((prev) => {
+          const newFormState = { ...prev };
+          data.forEach((donation) => {
+            if (prev[donation.id] === undefined) {
+              newFormState[donation.id] = false;
+            }
+          });
+          return newFormState;
+        });
+
+        setLoading(false);
+      } else {
+        console.error(
+          "Failed to fetch donations:",
+          response.status,
+          response.statusText
+        );
+        setError("Failed to fetch donations");
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Error fetching donations:", error.message);
+      setError("Error fetching donations");
+      setLoading(false);
+    }
+  };
+
   const handleRecommendClick = (donationId) => {
     setShowRecommendationForm((prev) => ({ ...prev, [donationId]: true }));
   };
@@ -33,6 +87,19 @@ const Donations = () => {
 
       if (response.ok) {
         console.log("Recommendation submitted successfully");
+
+        // Fetch the updated donation after submission
+        const updatedDonationResponse = await fetch(
+          `http://localhost:7000/api/donations/${donationId}`
+        );
+        const updatedDonation = await updatedDonationResponse.json();
+
+        // Update the state to include the new donation
+        setDonations((prevDonations) => [
+          updatedDonation,
+          ...prevDonations.filter((donation) => donation.id !== donationId),
+        ]);
+
         setShowRecommendationForm((prev) => ({ ...prev, [donationId]: false }));
       } else {
         console.error(
@@ -51,13 +118,17 @@ const Donations = () => {
       const donorInfoResponse = await fetch(
         `http://localhost:7000/api/donations/${donationId}`
       );
-      const donorInfo = await donorInfoResponse.json();
+      const donorInfoArray = await donorInfoResponse.json();
 
-      console.log("Donor Information for Donation ID:", donationId, donorInfo);
+      console.log(
+        "Donor Information for Donation ID:",
+        donationId,
+        donorInfoArray
+      );
 
       setShowMessageForm((prev) => ({
         ...prev,
-        [donationId]: { show: true, donorInfo },
+        [donationId]: { show: true, donorInfo: donorInfoArray[0] },
       }));
     } catch (error) {
       console.error("Error fetching donor information:", error.message);
@@ -70,7 +141,18 @@ const Donations = () => {
 
   const handleMessageSubmit = async (donationId, messageData) => {
     try {
-      // Fetch the donor information (email, itemName, and itemDescription) based on the donation ID
+      // Fetch the updated donation after submission
+      const updatedDonationResponse = await fetch(
+        `http://localhost:7000/api/donations/${donationId}`
+      );
+      const updatedDonation = await updatedDonationResponse.json();
+
+      // Update the state to include the new donation
+      setDonations((prevDonations) => [
+        updatedDonation,
+        ...prevDonations.filter((donation) => donation.id !== donationId),
+      ]);
+
       const donorInfoResponse = await fetch(
         `http://localhost:7000/api/donations/${donationId}`
       );
@@ -102,92 +184,79 @@ const Donations = () => {
   };
 
   useEffect(() => {
-    const fetchDonations = async () => {
-      try {
-        const response = await fetch("http://localhost:7000/api/donations");
-        if (response.ok) {
-          const data = await response.json();
-          setDonations(data);
+    const intervalId = setInterval(fetchDonations, 1000);
 
-          setShowRecommendationForm(
-            Object.fromEntries(data.map((donation) => [donation.id, false]))
-          );
-
-          setShowMessageForm(
-            Object.fromEntries(data.map((donation) => [donation.id, false]))
-          );
-
-          setLoading(false);
-        } else {
-          console.error(
-            "Failed to fetch donations:",
-            response.status,
-            response.statusText
-          );
-          setError("Failed to fetch donations");
-          setLoading(false);
-        }
-      } catch (error) {
-        console.error("Error fetching donations:", error.message);
-        setError("Error fetching donations");
-        setLoading(false);
-      }
-    };
-
-    fetchDonations();
+    return () => clearInterval(intervalId);
   }, []);
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
 
   return (
     <div>
       <h1 className="donations-header">Donations</h1>
-      <hr />
       <div className="donations-container">
-        {donations.map((donation, index) => (
-          <div key={index} className="donation-card">
-            {donation.category
-              ? donation.category.toLowerCase()
-              : "Unknown Category"}
-            <p className="item-description">{donation.itemDescription}</p>
+        {donations.length === 0 ? (
+          <p className="text">No donations available</p>
+        ) : (
+          donations.map((donation, index) => (
+            <div key={index} className="donation-card">
+              {donation.category
+                ? donation.category.toLowerCase()
+                : "Unknown Category"}
+              <p className="item-description">{donation.itemDescription}</p>
 
-            <div>
-              <button
-                className="recommend-button"
-                onClick={() => handleRecommendClick(donation.id)}
-              >
-                Recommend this Donation
-              </button>
-              {showRecommendationForm[donation.id] && (
-                <DonationRecommendationForm
-                  donation={donation}
-                  onRecommendationSubmit={(data) =>
-                    handleRecommendationSubmit(donation.id, data)
-                  }
-                  onCancelClick={() => handleCancelRecommendation(donation.id)}
-                />
-              )}
+              <div>
+                <button
+                  className="recommend-button"
+                  onClick={() => handleRecommendClick(donation.id)}
+                >
+                  Recommend this Donation
+                </button>
+                {showRecommendationForm[donation.id] && (
+                  <DonationRecommendationForm
+                    donation={donation}
+                    onRecommendationSubmit={(data) =>
+                      handleRecommendationSubmit(donation.id, data)
+                    }
+                    onCancelClick={() =>
+                      handleCancelRecommendation(donation.id)
+                    }
+                  />
+                )}
+              </div>
+              <p></p>
+              <p>
+                To reach out to the author of this donation post, please use the
+                messaging feature:
+              </p>
+              <p></p>
+              <div>
+                <button
+                  className="message-button"
+                  onClick={() => handleShowMessageForm(donation.id)}
+                >
+                  Message
+                </button>
+                {showMessageForm[donation.id] && (
+                  <MessageForm
+                    donation={donation}
+                    donorInfo={showMessageForm[donation.id].donorInfo}
+                    onMessageSubmit={(data) =>
+                      handleMessageSubmit(donation.id, data)
+                    }
+                    onCancelClick={() => handleCancelMessageForm(donation.id)}
+                  />
+                )}
+              </div>
+              <hr />
             </div>
-
-            <div>
-              <button
-                className="message-button"
-                onClick={() => handleShowMessageForm(donation.id)}
-              >
-                Message
-              </button>
-              {showMessageForm[donation.id] && (
-                <MessageForm
-                  donation={donation}
-                  donorInfo={showMessageForm[donation.id].donorInfo}
-                  onMessageSubmit={(data) =>
-                    handleMessageSubmit(donation.id, data)
-                  }
-                  onCancelClick={() => handleCancelMessageForm(donation.id)}
-                />
-              )}
-            </div>
-            <hr />
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <hr />
     </div>
