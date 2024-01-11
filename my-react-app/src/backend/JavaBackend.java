@@ -21,12 +21,15 @@ public class JavaBackend {
             // Create the main server on port 7000
             HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
 
-            // Create a context for the '/api/questions' endpoint
+            // Create a context 
             server.createContext("/api/questions", new Questions.QuestionsHandler());
             server.createContext("/api/jobs", new Jobs.JobsHandler());
             server.createContext("/api/applications", new JobApplication.ApplicationsHandler());
             server.createContext("/api/donations", new Donations.DonationsHandler());
             server.createContext("/api/stories", new SuccessStories.StoriesHandler());
+            server.createContext("/api/consultants", new Consultants.ConsultantsHandler());
+
+
 
             // Start the server
             server.setExecutor(null);

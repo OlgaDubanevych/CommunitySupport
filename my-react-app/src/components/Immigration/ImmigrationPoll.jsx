@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import '../Pages/JobSearchPage.css'
+import React, { useState } from "react";
+import "../Pages/JobSearchPage.css";
 
 function ImmigrationPoll() {
   const [pollData, setPollData] = useState({
@@ -14,7 +14,7 @@ function ImmigrationPoll() {
     daycare: 0,
     other: 0,
   });
-  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedOption, setSelectedOption] = useState("");
   const [submitted, setSubmitted] = useState(false);
 
   const handleOptionChange = (event) => {
@@ -24,8 +24,11 @@ function ImmigrationPoll() {
   const handleSubmit = (event) => {
     event.preventDefault();
     if (selectedOption) {
-      setPollData((prevState) => ({ ...prevState, [selectedOption]: prevState[selectedOption] + 1 }));
-      setSelectedOption('');
+      setPollData((prevState) => ({
+        ...prevState,
+        [selectedOption]: prevState[selectedOption] + 1,
+      }));
+      setSelectedOption("");
       setSubmitted(true);
       setTimeout(() => {
         setSubmitted(false);
@@ -33,65 +36,73 @@ function ImmigrationPoll() {
     }
   };
 
-  const totalVotes = Object.values(pollData).reduce((a, b) => parseInt(a) + parseInt(b), 0);
+  const totalVotes = Object.values(pollData).reduce(
+    (a, b) => parseInt(a) + parseInt(b),
+    0
+  );
 
   const pollOptions = [
-    { name: 'job', label: 'Finding a Job' },
-    { name: 'networking', label: 'Networking' },
-    { name: 'friends', label: 'Finding Friends' },
-    { name: 'education', label: 'Need to Continue Education' },
-    { name: 'language', label: 'Language Barrier' },
-    { name: 'finance', label: 'Financial Difficulties' },
-    { name: 'housing', label: 'Rental/Home Purchase Price' },
-    { name: 'culture', label: 'Cultural Differences' },
-    { name: 'daycare', label: 'Daycare/Child Support' },
-    { name: 'other', label: 'Other' },
+    { name: "job", label: "Finding a Job" },
+    { name: "networking", label: "Networking" },
+    { name: "friends", label: "Finding Friends" },
+    { name: "education", label: "Need to Continue Education" },
+    { name: "language", label: "Language Barrier" },
+    { name: "finance", label: "Financial Difficulties" },
+    { name: "housing", label: "Rental/Home Purchase Price" },
+    { name: "culture", label: "Cultural Differences" },
+    { name: "daycare", label: "Daycare/Child Support" },
+    { name: "other", label: "Other" },
   ];
 
   return (
-    <div classsName = "text">
-      <h2 className = "header">What aspects of immigrating to Canada you personally find most challenging?</h2>
+    <div className="text">
+      <h2 className="header">
+        What aspects of immigrating to Canada you personally find most
+        challenging?
+      </h2>
       <div>
-      <form onSubmit={handleSubmit}>
-        {pollOptions.map((option) => (
-          <div key={option.name}>
-            <label className = "text" htmlFor={option.name}>
-              <input
-                type="radio"
-                id={option.name}
-                name="selectedOption"
-                value={option.name}
-                checked={selectedOption === option.name}
-                onChange={handleOptionChange}
-              />
-              {option.label}
-            </label>
+        <form onSubmit={handleSubmit}>
+          {pollOptions.map((option) => (
+            <div key={option.name}>
+              <label className="text" htmlFor={option.name}>
+                <input
+                  type="radio"
+                  id={option.name}
+                  name="selectedOption"
+                  value={option.name}
+                  checked={selectedOption === option.name}
+                  onChange={handleOptionChange}
+                />
+                {option.label}
+              </label>
+            </div>
+          ))}
+          <p></p>
+          <button type="submit" className="submit">
+            Submit
+          </button>
+          <p></p>
+        </form>
+        {submitted && (
+          <div className="results">
+            <p className="other_text">Thank you for your opinion!</p>
+            <h3 className="other_text">Poll Results:</h3>
+            <ul>
+              {pollOptions.map((option) => (
+                <li className="other_text" key={option.name}>
+                  <span className="other_text">{option.label}</span>
+                  <span className="other_text">{pollData[option.name]}</span>
+                  <span className="percentage">
+                    ({Math.round((pollData[option.name] / totalVotes) * 100)}%)
+                  </span>
+                </li>
+              ))}
+              <p></p>
+              <li className="text">Total Votes: {totalVotes}</li>
+            </ul>
           </div>
-        ))}
-        <p></p>
-        <button type="submit" className = "submit" >Submit</button>
-        <p></p>
-      </form>
-      {submitted && (
-        <div className="results">
-          <p className="other_text">Thank you for your opinion!</p>
-          <h3 className="other_text">Poll Results:</h3>
-          <ul>
-            {pollOptions.map((option) => (
-              <li className = "other_text" key={option.name}>
-                <span className="other_text">{option.label}</span>
-                <span className="other_text">{pollData[option.name]}</span>
-                <span className="percentage">
-                  ({Math.round((pollData[option.name] / totalVotes) * 100)}%)
-                </span>
-              </li>
-            ))}
-            <p></p>
-            <li className="text">Total Votes: {totalVotes}</li>
-          </ul>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
     </div>
   );
 }
