@@ -1,128 +1,178 @@
+// Consultants.jsx
 import React, { useState, useEffect } from "react";
+import MessageForm from "./MessageForm";
 import "../Pages/ImmigrationPage.css";
 
-const ImmigrationConsultants = () => {
-  const [questions, setQuestions] = useState({});
-  const [submitMessage, setSubmitMessage] = useState("");
+const Consultants = () => {
   const [consultants, setConsultants] = useState([]);
+  const [showMessageForm, setShowMessageForm] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  useEffect(() => {
-    // Fetch consultants from the backend when the component mounts
-    fetch("http://localhost:7000/api/consultants") // Update the URL with your backend endpoint
-      .then((response) => response.json())
-      .then((data) => setConsultants(data))
-      .catch((error) => console.error("Error fetching consultants:", error));
-  }, []); // Empty dependency array to run the effect only once when the component mounts
-
-  const handleQuestionChange = (event, consultant) => {
-    const { name, value } = event.target;
-    setQuestions((prevState) => ({
-      ...prevState,
-      [`${consultant.firstName}-${consultant.lastName}-${name}`]: value,
-    }));
-  };
-
-  const handleQuestionSubmit = async (event, consultant) => {
-    event.preventDefault();
-
-    const question =
-      questions[`${consultant.firstName}-${consultant.lastName}-question`];
-    const email = consultant.email;
-
+  const fetchConsultants = async () => {
     try {
-      const response = await fetch(
-        `http://localhost:7000/api/donations/${consultant.id}/message`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            question,
-            email,
-          }),
-        }
-      );
-
+      const response = await fetch("http://localhost:7000/api/consultants");
       if (response.ok) {
-        setSubmitMessage("Your Question was submitted");
-        setTimeout(() => {
-          setSubmitMessage("");
-        }, 4000);
+        const data = await response.json();
+        setConsultants(data);
+
+        setShowMessageForm((prev) => {
+          const newFormState = { ...prev };
+          data.forEach((consultant) => {
+            if (prev[consultant.id] === undefined) {
+              newFormState[consultant.id] = false;
+            }
+          });
+          return newFormState;
+        });
+
+        setLoading(false);
       } else {
-        console.error("Failed to submit question");
+        console.error(
+          "Failed to fetch consultants:",
+          response.status,
+          response.statusText
+        );
+        setError("Failed to fetch consultants");
+        setLoading(false);
       }
     } catch (error) {
-      console.error("Error during question submission:", error);
+      console.error("Error fetching consultants:", error.message);
+      setError("Error fetching consultants");
+      setLoading(false);
     }
   };
 
+  const handleShowMessageForm = async (consultantId) => {
+    try {
+      const consultantInfoResponse = await fetch(
+        `http://localhost:7000/api/consultants/${consultantId}`
+      );
+      const consultantInfoArray = await consultantInfoResponse.json();
+
+      console.log(
+        "Consultant Information for Consultant ID:",
+        consultantId,
+        consultantInfoArray
+      );
+
+      setShowMessageForm((prev) => ({
+        ...prev,
+        [consultantId]: { show: true, consultantInfo: consultantInfoArray[0] },
+      }));
+    } catch (error) {
+      console.error("Error fetching consultant information:", error.message);
+    }
+  };
+
+  const handleCancelMessageForm = (consultantId) => {
+    setShowMessageForm((prev) => ({ ...prev, [consultantId]: false }));
+  };
+
+  const handleMessageSubmit = async (consultantId, messageData) => {
+    try {
+      // Fetch the updated consultant after submission
+      const updatedConsultantResponse = await fetch(
+        `http://localhost:7000/api/consultants/${consultantId}`
+      );
+      const updatedConsultant = await updatedConsultantResponse.json();
+
+      // Update the state to include the new consultant
+      setConsultants((prevConsultants) => [
+        updatedConsultant,
+        ...prevConsultants.filter(
+          (consultant) => consultant.id !== consultantId
+        ),
+      ]);
+
+      const consultantInfoResponse = await fetch(
+        `http://localhost:7000/api/consultants/${consultantId}`
+      );
+      const consultantInfoArray = await consultantInfoResponse.json();
+
+      if (consultantInfoArray.length > 0) {
+        const consultantInfo = consultantInfoArray[0]; // Access the first element
+        // Include consultant email in the message body
+        const emailBody = `Consultant Email: ${consultantInfo.email}\n${messageData.message}`;
+
+        // Create a mailto link with subject and body
+        const subject = encodeURIComponent("Consultant Message");
+        const body = encodeURIComponent(emailBody);
+        const mailtoLink = `mailto:${consultantInfo.email}?subject=${subject}&body=${body}`;
+
+        // Open a new window or tab with the mailto link
+        window.open(mailtoLink);
+
+        setShowMessageForm((prev) => ({ ...prev, [consultantId]: false }));
+      } else {
+        console.error(
+          "Consultant information not found for Consultant ID:",
+          consultantId
+        );
+      }
+    } catch (error) {
+      console.error("Error sending message:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    const intervalId = setInterval(fetchConsultants, 1000);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  if (error) {
+    return <p>Error: {error}</p>;
+  }
+
   return (
     <div>
-      <h2 className="header">Immigration Consultants</h2>
-
-      <div className="text">
-        {consultants.map((consultant) => (
-          <div key={`${consultant.firstName}-${consultant.lastName}`}>
-            <h2>
-              {consultant.firstName} {consultant.lastName}
-            </h2>
-            <p className="other_text">
-              {consultant.organization} | {consultant.email} |{" "}
-              {consultant.phone}
-            </p>
-            <p className="other_text">{consultant.competitiveAdvantage}</p>
-            <form onSubmit={(event) => handleQuestionSubmit(event, consultant)}>
-              <label
-                htmlFor={`${consultant.firstName}-${consultant.lastName}-question`}
-              >
-                Ask a Question:
-              </label>
-              <br />
-              <textarea
-                id={`${consultant.firstName}-${consultant.lastName}-question`}
-                name="question"
-                rows="4"
-                cols="50"
-                value={
-                  questions[
-                    `${consultant.firstName}-${consultant.lastName}-question`
-                  ] || ""
-                }
-                onChange={(event) => handleQuestionChange(event, consultant)}
-              />
-              <br />
-              <p></p>
-              <label
-                htmlFor={`${consultant.firstName}-${consultant.lastName}-email`}
-              >
-                Your Email Address:
-              </label>
-              <br />
-              <input
-                type="email"
-                id={`${consultant.firstName}-${consultant.lastName}-email`}
-                name="email"
-                value={
-                  questions[
-                    `${consultant.firstName}-${consultant.lastName}-email`
-                  ] || ""
-                }
-                onChange={(event) => handleQuestionChange(event, consultant)}
-              />
-              <br />
-              <p></p>
-              <button type="submit" className="submit">
-                Submit
-              </button>
-            </form>
-            <div>{submitMessage}</div>
-            <hr />
-          </div>
-        ))}
+      <h1 className="consultants-header">Consultants</h1>
+      <div className="consultants-container">
+        {consultants.length === 0 ? (
+          <p className="text">No consultants available</p>
+        ) : (
+          consultants.map((consultant) => (
+            <div key={consultant.id} className="consultant-card">
+              <h2 className="consultant-name">
+                {consultant.firstName} {consultant.lastName}
+              </h2>
+              <p className="other_text">
+                {consultant.organization} | {consultant.email} |{" "}
+                {consultant.phone}
+              </p>
+              <p className="other_text">{consultant.competitiveAdvantage}</p>
+              <div>
+                <button
+                  className="message-button"
+                  onClick={() => handleShowMessageForm(consultant.id)}
+                >
+                  Message
+                </button>
+                {showMessageForm[consultant.id] && (
+                  <MessageForm
+                    consultant={consultant}
+                    consultantInfo={
+                      showMessageForm[consultant.id].consultantInfo
+                    }
+                    onMessageSubmit={(data) =>
+                      handleMessageSubmit(consultant.id, data)
+                    }
+                    onCancelClick={() => handleCancelMessageForm(consultant.id)}
+                  />
+                )}
+              </div>
+              <hr />
+            </div>
+          ))
+        )}
       </div>
+      <hr />
     </div>
   );
 };
-
-export default ImmigrationConsultants;
+export default Consultants;
