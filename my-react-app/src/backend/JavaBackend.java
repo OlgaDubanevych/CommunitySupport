@@ -28,7 +28,7 @@ public class JavaBackend {
             server.createContext("/api/donations", new Donations.DonationsHandler());
             server.createContext("/api/stories", new SuccessStories.StoriesHandler());
             server.createContext("/api/consultants", new Consultants.ConsultantsHandler());
-
+             server.createContext("/api/websites", new Websites.WebsiteHandler());
 
 
             // Start the server
