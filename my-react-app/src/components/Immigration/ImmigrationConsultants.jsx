@@ -131,7 +131,7 @@ const Consultants = () => {
 
   return (
     <div>
-      <h1 className="consultants-header">Consultants</h1>
+      <h1 className="header">Consultants</h1>
       <div className="consultants-container">
         {consultants.length === 0 ? (
           <p className="text">No consultants available</p>

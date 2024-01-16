@@ -42,7 +42,9 @@ const DonationRecommendationForm = ({
             <label htmlFor="firstName" className="text">
               Your First Name:&nbsp;
             </label>
+            <p></p>
             <input
+              className="other_text"
               type="text"
               id="firstName"
               value={firstName}
@@ -50,11 +52,14 @@ const DonationRecommendationForm = ({
               required
             />
           </div>
+          <p></p>
           <div className="form-field">
             <label htmlFor="lastName" className="text">
               Your Last Name: &nbsp;
             </label>
+            <p></p>
             <input
+              className="other_text"
               type="text"
               id="lastName"
               value={lastName}
@@ -62,12 +67,15 @@ const DonationRecommendationForm = ({
               required
             />
           </div>
+          <p></p>
           <div className="form-field">
             <label htmlFor="email" className="text">
               To recommend this donation to a specific person, kindly enter
               their email address: &nbsp;
             </label>
+            <p></p>
             <input
+              className="other_text"
               type="email"
               id="email"
               value={email}
@@ -89,7 +97,7 @@ const DonationRecommendationForm = ({
           <button type="submit" className="submit">
             Submit
           </button>
-          <button type="button" onClick={onCancelClick} className="cancel">
+          <button type="button" onClick={onCancelClick} className="submit">
             Cancel
           </button>
         </form>

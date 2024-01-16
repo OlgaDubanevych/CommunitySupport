@@ -75,6 +75,7 @@ function RecommendImmigrationConsultant(props) {
       <form className="text" onSubmit={handleSubmit}>
         <div>
           <label htmlFor="firstName">Consultant's First Name: &nbsp; </label>
+          <p></p>
           <input
             type="text"
             id="firstName"
@@ -86,6 +87,7 @@ function RecommendImmigrationConsultant(props) {
         </div>
         <div>
           <label htmlFor="lastName">Consultant's Last Name: &nbsp;</label>
+          <p></p>
           <input
             type="text"
             id="lastName"
@@ -97,6 +99,7 @@ function RecommendImmigrationConsultant(props) {
         </div>
         <div>
           <label htmlFor="organization">Name of the Organization: &nbsp;</label>
+          <p></p>
           <input
             type="text"
             id="organization"
@@ -108,6 +111,7 @@ function RecommendImmigrationConsultant(props) {
         </div>
         <div>
           <label htmlFor="email">Consultant's Email Address: &nbsp;</label>
+          <p></p>
           <input
             type="email"
             id="email"
@@ -119,6 +123,7 @@ function RecommendImmigrationConsultant(props) {
           <br />
           <p></p>
           <label htmlFor="phone">Consultant's Phone Number: &nbsp;</label>
+          <p></p>
           <input
             type="tel"
             id="phone"
@@ -133,6 +138,7 @@ function RecommendImmigrationConsultant(props) {
           <label htmlFor="competitiveAdvantage">
             Why would you recommend this Immigration Consultant? &nbsp;
           </label>
+          <p></p>
           <textarea
             id="competitiveAdvantage"
             name="competitiveAdvantage"

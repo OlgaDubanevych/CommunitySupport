@@ -82,6 +82,8 @@ function UsefulLinks() {
   useEffect(() => {
     const sendAllWebsitesToBackend = async () => {
       try {
+        // Delay the initial fetch by a few seconds
+        await new Promise((resolve) => setTimeout(resolve, 3000));
         const response = await fetch("http://localhost:7000/api/websites", {
           method: "POST",
           headers: {

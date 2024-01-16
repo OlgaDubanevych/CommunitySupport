@@ -84,10 +84,11 @@ function DonationForm() {
   return (
     <div>
       <h2 className="header">Submit your Donation</h2>
-      <form className="donation-form" onSubmit={handleSubmit}>
+      <form className="text" onSubmit={handleSubmit}>
         <div className="form-group">
           <label>
             <span>Item Name:</span>
+            <p></p>
             <input
               type="text"
               value={itemName}
@@ -98,6 +99,7 @@ function DonationForm() {
         <div className="form-group">
           <label>
             <span>Item Description:</span>
+            <p></p>
             <textarea
               value={itemDescription}
               onChange={(e) => setItemDescription(e.target.value)}
@@ -107,6 +109,7 @@ function DonationForm() {
         <div className="form-group">
           <label>
             <span>First Name:</span>
+            <p></p>
             <input
               type="text"
               value={firstName}
@@ -117,6 +120,7 @@ function DonationForm() {
         <div className="form-group">
           <label>
             <span>Last Name:</span>
+            <p></p>
             <input
               type="text"
               value={lastName}
@@ -127,6 +131,7 @@ function DonationForm() {
         <div className="form-group">
           <label>
             <span>Email:</span>
+            <p></p>
             <input
               type="email"
               value={email}
@@ -137,6 +142,7 @@ function DonationForm() {
         <div className="form-group">
           <label>
             <span>Phone:</span>
+            <p></p>
             <input
               type="tel"
               value={phone}
@@ -150,6 +156,7 @@ function DonationForm() {
             onCategoryChange={handleCategoryChange}
           />
         </div>
+        <p></p>
         <div className="form-group">
           <button type="submit" className="submit-button">
             Submit

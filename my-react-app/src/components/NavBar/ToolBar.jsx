@@ -1,18 +1,16 @@
 import React from "react";
-import SideMenu from './Sidemenu/SideMenu'
+import SideMenu from "./Sidemenu/SideMenu";
 import "./ToolBar.css";
-import LogIn from './LogIn'
 
-const ToolBar = props => (
+const ToolBar = (props) => (
   <header className="toolbar">
     <nav className="toolbar_navigator">
       <div />
-      
+
       <div className="toggle-btn">
         <SideMenu click={props.drawerToggleClickHandler} />
       </div>
 
-      
       <div className="toolbar_navigation-items">
         <ul>
           <li>
@@ -30,14 +28,10 @@ const ToolBar = props => (
           <li>
             <a href="/immigration">Immigration</a>
           </li>
-          </ul>
-        </div>
-
-        <LogIn />
-      </nav>
-    </header>
-  );
-
+        </ul>
+      </div>
+    </nav>
+  </header>
+);
 
 export default ToolBar;
-

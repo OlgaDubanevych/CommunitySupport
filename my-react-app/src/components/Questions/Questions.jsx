@@ -151,6 +151,7 @@ const Questions = () => {
                     ))}
                   </div>
                 )}
+                <p></p>
                 <form
                   onSubmit={(e) => {
                     e.preventDefault();
@@ -168,7 +169,7 @@ const Questions = () => {
                     />
                   </label>
                   <p></p>
-                  <button className="submit-button" type="submit">
+                  <button className="submit_c" type="submit">
                     Submit Comment
                   </button>
                 </form>

@@ -53,7 +53,8 @@ const StoryForm = () => {
     <form onSubmit={handleSubmit}>
       <h1 className="header">Share Your Success Story</h1>
       <div className="input-text">
-        <label htmlFor="firstName">First Name:</label>
+        <label htmlFor="firstName">First Name: </label>
+        <p></p>
         <input
           type="text"
           id="firstName"
@@ -63,8 +64,10 @@ const StoryForm = () => {
           required
         />
       </div>
+      <p></p>
       <div className="input-text">
-        <label htmlFor="lastName">Last Name:</label>
+        <label htmlFor="lastName">Last Name: </label>
+        <p></p>
         <input
           type="text"
           id="lastName"
@@ -75,7 +78,9 @@ const StoryForm = () => {
         />
       </div>
       <div className="input-text">
-        <label htmlFor="email">Your Email:</label>
+        <p></p>
+        <label htmlFor="email">Your Email: </label>
+        <p></p>
         <input
           type="email"
           id="email"
@@ -86,7 +91,8 @@ const StoryForm = () => {
         />
       </div>
       <div className="input-text">
-        <label htmlFor="story">Your Story:</label>
+        <label htmlFor="story">Your Story: </label>
+        <p></p>
         <textarea
           id="story"
           name="story"
@@ -95,6 +101,7 @@ const StoryForm = () => {
           required
         />
       </div>
+      <p></p>
       <button type="submit" className="submit">
         Submit
       </button>

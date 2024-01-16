@@ -102,37 +102,41 @@ const Jobs = () => {
   return (
     <div className="job-list">
       <h2 className="header">Job Postings</h2>
-      {jobs.map((job, index) => (
-        <div key={index} className="job">
-          <h3 className="text">{job.jobTitle}</h3>
-          <p className="other_text">{job.jobDescription}</p>
-          <button
-            className="submit_text"
-            onClick={() => handleApplyNowClick(job.jobTitle)}
-          >
-            Apply Now
-          </button>
-          <p></p>
-          <button
-            className="submit_text"
-            onClick={() => handleRecommendClick(job.jobTitle)}
-          >
-            Recommend
-          </button>{" "}
-          {job.showApplicationForm && (
-            <ApplicationForm
-              jobTitle={job.jobTitle}
-              onCancelClick={() => handleCancelClick(job.jobTitle)}
-            />
-          )}
-          {showRecommendationForm && selectedJobTitle === job.jobTitle && (
-            <RecommendationForm
-              onCancelClick={() => handleCancelClick(job.jobTitle)}
-            />
-          )}
-          {index !== jobs.length - 1 && <hr />}
-        </div>
-      ))}
+      {jobs.length === 0 ? (
+        <p className="text">No jobs were posted yet</p>
+      ) : (
+        jobs.map((job, index) => (
+          <div key={index} className="job">
+            <h3 className="text">{job.jobTitle}</h3>
+            <p className="other_text">{job.jobDescription}</p>
+            <button
+              className="submit_c"
+              onClick={() => handleApplyNowClick(job.jobTitle)}
+            >
+              Apply Now
+            </button>
+            <p></p>
+            <button
+              className="submit_c"
+              onClick={() => handleRecommendClick(job.jobTitle)}
+            >
+              Recommend
+            </button>{" "}
+            {job.showApplicationForm && (
+              <ApplicationForm
+                jobTitle={job.jobTitle}
+                onCancelClick={() => handleCancelClick(job.jobTitle)}
+              />
+            )}
+            {showRecommendationForm && selectedJobTitle === job.jobTitle && (
+              <RecommendationForm
+                onCancelClick={() => handleCancelClick(job.jobTitle)}
+              />
+            )}
+            {index !== jobs.length - 1 && <hr />}
+          </div>
+        ))
+      )}
 
       {/* Render JobPostingForm component */}
       <JobPostingForm onJobPosted={handleJobPosted} />

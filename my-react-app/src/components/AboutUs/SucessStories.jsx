@@ -39,7 +39,9 @@ function SuccessStories() {
     <div>
       <h1 className="header">Success Stories</h1>
       {loading && <p>Loading...</p>}
-      {!loading && stories.length === 0 && <p>No stories were posted yet.</p>}
+      {!loading && stories.length === 0 && (
+        <p className="text">No stories were posted yet.</p>
+      )}
       {stories.map((story) => (
         <div key={story.id} className="story-divider">
           <h2 className="text">{`${story.firstName} ${story.lastName}`}</h2>

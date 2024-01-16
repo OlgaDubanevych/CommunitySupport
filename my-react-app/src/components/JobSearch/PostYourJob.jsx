@@ -81,6 +81,7 @@ const JobPostingForm = ({ onJobPosted }) => {
 
       <label className="text">
         Job Posting Date:
+        <p></p>
         <input
           className="input-text"
           type="date"
@@ -92,6 +93,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Job Expiry Date:
+        <p></p>
         <input
           className="input-text"
           type="date"
@@ -103,6 +105,8 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Company Name:
+        <p></p>
+        <break></break>
         <input
           className="input-text"
           type="text"
@@ -114,6 +118,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Job Title/ Role:
+        <p></p>
         <input
           className="input-text"
           type="text"
@@ -125,6 +130,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Job Description:
+        <p></p>
         <textarea
           className="input-text"
           value={jobDescription}
@@ -135,6 +141,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Job Location:
+        <p></p>
         <input
           className="input-text"
           type="text"
@@ -146,6 +153,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Anticipated Salary:
+        <p></p>
         <input
           className="input-text"
           type="text"
@@ -157,6 +165,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Your First Name:
+        <p></p>
         <input
           className="input-text"
           type="text"
@@ -168,6 +177,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Your Last Name:
+        <p></p>
         <input
           className="input-text"
           type="text"
@@ -179,6 +189,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Your Email Address:
+        <p></p>
         <input
           className="input-text"
           type="email"
@@ -190,6 +201,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <p></p>
       <label className="text">
         Your Phone Number:
+        <p></p>
         <input
           className="input-text"
           type="tel"

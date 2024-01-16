@@ -3,9 +3,10 @@ function CategoriesOfDonations(props) {
   const { onCategoryChange } = props;
   return (
     <>
-      <label htmlFor="donationCategory">Select your category:</label>
+      <label htmlFor="donationCategory">Category:</label>
+      <p></p>
       <select
-        className="text"
+        className="category"
         value={props.donationCategory}
         onChange={onCategoryChange}
         name="donationCategory"

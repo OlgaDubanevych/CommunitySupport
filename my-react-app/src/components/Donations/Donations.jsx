@@ -199,15 +199,13 @@ const Donations = () => {
   return (
     <div>
       <h1 className="donations-header">Donations</h1>
-      <div className="donations-container">
+      <div className="text">
         {donations.length === 0 ? (
           <p className="text">No donations available</p>
         ) : (
           donations.map((donation, index) => (
             <div key={index} className="donation-card">
-              {donation.category
-                ? donation.category.toLowerCase()
-                : "Unknown Category"}
+              <p className="item-name">{donation.itemName}</p>
               <p className="item-description">{donation.itemDescription}</p>
 
               <div>

@@ -1,11 +1,8 @@
 import React, { useState } from "react";
-import ToolBar from './ToolBar'
+import ToolBar from "./ToolBar";
 import SideDrawer from "./Sidemenu/SideDrawer";
 import BackDrop from "./Backdrop/BackDrop";
 import "./NavBar.css";
-import LogIn from './LogIn'
-
-
 
 function NavBar() {
   const [sideDrawerOpen, setSideDrawerOpen] = useState(false);

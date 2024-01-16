@@ -27,7 +27,7 @@ const RecommendationForm = () => {
   };
 
   return (
-    <div className="recommendation-form-container">
+    <div className="text">
       <h4 className="recommendation-header text">Recommend this Job:</h4>
       {submitted ? (
         <p className="success-message text">Your recommendation was sent!</p>
@@ -35,9 +35,8 @@ const RecommendationForm = () => {
         <form onSubmit={handleSubmit}>
           <div className="form-field">
             <p></p>
-            <label htmlFor="firstName" className="text">
-              First Name:&nbsp;
-            </label>
+            <label htmlFor="firstName">First Name:&nbsp;</label>
+            <p></p>
             <input
               type="text"
               id="firstName"
@@ -48,9 +47,8 @@ const RecommendationForm = () => {
           </div>
           <p></p>
           <div className="form-field">
-            <label htmlFor="lastName" className="text">
-              Last Name: &nbsp;
-            </label>
+            <label htmlFor="lastName">Your Last Name: &nbsp;</label>
+            <p></p>
             <input
               type="text"
               id="lastName"
@@ -61,9 +59,11 @@ const RecommendationForm = () => {
           </div>
           <p></p>
           <div className="form-field">
-            <label htmlFor="email" className="text">
-              Email: &nbsp;
+            <label htmlFor="email">
+              email address of the individual you'd like to share this exciting
+              job opportunity with: &nbsp;
             </label>
+            <p></p>
             <input
               type="email"
               id="email"

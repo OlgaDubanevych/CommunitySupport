@@ -54,12 +54,13 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
   };
 
   return (
-    <div>
-      <h2 className="text">Application Form: {jobTitle}</h2>
-      <div className="other_text">
+    <div className="text">
+      <h2>Application Form: {jobTitle}</h2>
+      <div>
         <form onSubmit={handleSubmit}>
           <label>
             First Name:&nbsp;
+            <p></p>
             <input
               type="text"
               name="firstName"
@@ -69,8 +70,10 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             />
           </label>
           <br />
+          <p></p>
           <label>
             Last Name:&nbsp;
+            <p></p>
             <input
               type="text"
               name="lastName"
@@ -80,8 +83,10 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             />
           </label>
           <br />
+          <p></p>
           <label>
             Email:&nbsp;
+            <p></p>
             <input
               type="email"
               name="email"
@@ -91,8 +96,10 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             />
           </label>
           <br />
+          <p></p>
           <label>
             Phone:&nbsp;
+            <p></p>
             <input
               type="tel"
               name="phone"
@@ -102,8 +109,10 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             />
           </label>
           <br />
+          <p></p>
           <label>
             Resume Text (mandatory):&nbsp;
+            <p></p>
             <textarea
               name="resume"
               value={formData.resume}
@@ -112,8 +121,10 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
             />
           </label>
           <br />
+          <p></p>
           <label>
             Cover Letter Text (optional):&nbsp;
+            <p></p>
             <textarea
               name="coverLetter"
               value={formData.coverLetter}
