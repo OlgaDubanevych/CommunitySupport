@@ -133,7 +133,7 @@ const Questions = () => {
       <div>
         <h1 className="questions-header">Questions</h1>
         {loading ? (
-          <p classname="text">Loading questions...</p>
+          <p className="text">Loading questions...</p>
         ) : error ? (
           <p className="text">{error}</p>
         ) : allQuestions.length === 0 ? (

@@ -1,38 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Bar } from "react-chartjs-2";
+import "chart.js/auto";
 import "../Pages/JobSearchPage.css";
 
 function ImmigrationPoll() {
-  const [pollData, setPollData] = useState({
-    job: 0,
-    networking: 0,
-    friends: 0,
-    education: 0,
-    language: 0,
-    finance: 0,
-    housing: 0,
-    culture: 0,
-    daycare: 0,
-    other: 0,
-  });
+  const [pollData, setPollData] = useState({});
   const [selectedOption, setSelectedOption] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [chartData, setChartData] = useState(null);
+
+  useEffect(() => {
+    const data = {
+      labels: pollOptions.map((option) => option.label),
+      datasets: [
+        {
+          label: "Votes",
+          backgroundColor: "#BE212F",
+          data: pollOptions.map((option) => pollData[option.name] || 0),
+        },
+      ],
+    };
+    setChartData(data);
+  }, [pollData]);
 
   const handleOptionChange = (event) => {
     setSelectedOption(event.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     if (selectedOption) {
-      setPollData((prevState) => ({
-        ...prevState,
-        [selectedOption]: prevState[selectedOption] + 1,
-      }));
-      setSelectedOption("");
-      setSubmitted(true);
-      setTimeout(() => {
-        setSubmitted(false);
-      }, 6000);
+      try {
+        console.log("Sending data to backend:", selectedOption);
+        const url = `http://localhost:7000/api/poll?option=${selectedOption}`;
+        const response = await fetch(url, {
+          method: "POST",
+        });
+
+        if (response.ok) {
+          setPollData((prevState) => ({
+            ...prevState,
+            [selectedOption]: (prevState[selectedOption] || 0) + 1,
+          }));
+          setSelectedOption("");
+          setSubmitted(true);
+          setTimeout(() => {
+            setSubmitted(false);
+          }, 20000);
+        } else {
+          console.error("Failed to submit poll data");
+        }
+      } catch (error) {
+        console.error("Error during poll submission:", error);
+      }
     }
   };
 
@@ -87,19 +107,8 @@ function ImmigrationPoll() {
           <div className="results">
             <p className="other_text">Thank you for your opinion!</p>
             <h3 className="other_text">Poll Results:</h3>
-            <ul>
-              {pollOptions.map((option) => (
-                <li className="other_text" key={option.name}>
-                  <span className="other_text">{option.label}</span>
-                  <span className="other_text">{pollData[option.name]}</span>
-                  <span className="percentage">
-                    ({Math.round((pollData[option.name] / totalVotes) * 100)}%)
-                  </span>
-                </li>
-              ))}
-              <p></p>
-              <li className="text">Total Votes: {totalVotes}</li>
-            </ul>
+            {chartData && <Bar data={chartData} />}
+            <p className="text">Total Votes: {totalVotes}</p>
           </div>
         )}
       </div>
