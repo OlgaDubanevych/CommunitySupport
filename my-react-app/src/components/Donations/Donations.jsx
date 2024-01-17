@@ -210,7 +210,7 @@ const Donations = () => {
 
               <div>
                 <button
-                  className="recommend-button"
+                  className="submit_s"
                   onClick={() => handleRecommendClick(donation.id)}
                 >
                   Recommend this Donation
@@ -235,7 +235,7 @@ const Donations = () => {
               <p></p>
               <div>
                 <button
-                  className="message-button"
+                  className="submit_s"
                   onClick={() => handleShowMessageForm(donation.id)}
                 >
                   Message

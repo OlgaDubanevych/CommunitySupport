@@ -122,7 +122,7 @@ const Consultants = () => {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p className="other_text">Loading...</p>;
   }
 
   if (error) {
@@ -138,7 +138,7 @@ const Consultants = () => {
         ) : (
           consultants.map((consultant) => (
             <div key={consultant.id} className="consultant-card">
-              <h2 className="consultant-name">
+              <h2 className="name">
                 {consultant.firstName} {consultant.lastName}
               </h2>
               <p className="other_text">

@@ -90,6 +90,7 @@ const StoryForm = () => {
           required
         />
       </div>
+      <p></p>
       <div className="input-text">
         <label htmlFor="story">Your Story: </label>
         <p></p>

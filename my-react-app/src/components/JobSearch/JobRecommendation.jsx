@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../Pages/JobSearchPage.css";
 
-const RecommendationForm = () => {
+const RecommendationForm = ({ onCancelClick }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -23,6 +23,7 @@ const RecommendationForm = () => {
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
+      onCancelClick();
     }, 4000);
   };
 
@@ -73,8 +74,11 @@ const RecommendationForm = () => {
             />
           </div>
           <p></p>
-          <button type="submit" className="submit">
+          <button type="submit" className="submit_s">
             Submit
+          </button>
+          <button type="button" onClick={onCancelClick} className="submit_s">
+            Cancel
           </button>
         </form>
       )}

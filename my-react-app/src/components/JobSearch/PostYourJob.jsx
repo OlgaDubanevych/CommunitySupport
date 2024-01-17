@@ -106,7 +106,7 @@ const JobPostingForm = ({ onJobPosted }) => {
       <label className="text">
         Company Name:
         <p></p>
-        <break></break>
+        <p></p>
         <input
           className="input-text"
           type="text"

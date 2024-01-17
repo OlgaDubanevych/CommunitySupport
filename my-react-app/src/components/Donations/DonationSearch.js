@@ -103,7 +103,6 @@ const DonationSearch = ({ onSearch }) => {
                       <p>Item Description: {donation.itemDescription}</p>
                       <p>Category: {donation.category}</p>
                       <p>Email: {donation.email}</p>
-                      <p>Recommended: {donation.recommended ? "Yes" : "No"}</p>
                     </li>
                   ))}
                 </ul>

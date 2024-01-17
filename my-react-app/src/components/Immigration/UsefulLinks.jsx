@@ -159,7 +159,12 @@ function UsefulLinks() {
                 updateAverageRating(link.websiteId, averageRating)
               }
             />
-            <p>Average Rating: {averageRatings[link.websiteId]}</p>
+            <p>
+              Average Rating:{" "}
+              {averageRatings[link.websiteId]
+                ? averageRatings[link.websiteId].toFixed(1)
+                : "0.0"}
+            </p>
             <hr />
           </div>
         ))}

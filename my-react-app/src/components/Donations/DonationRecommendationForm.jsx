@@ -94,10 +94,10 @@ const DonationRecommendationForm = ({
               Item Description: <strong>{donation.itemDescription}</strong>
             </p>
           </div>
-          <button type="submit" className="submit">
+          <button type="submit" className="submit_s">
             Submit
           </button>
-          <button type="button" onClick={onCancelClick} className="submit">
+          <button type="button" onClick={onCancelClick} className="submit_s">
             Cancel
           </button>
         </form>

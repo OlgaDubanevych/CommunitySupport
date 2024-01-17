@@ -96,6 +96,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <label>
             <span>Item Description:</span>
@@ -106,6 +107,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <label>
             <span>First Name:</span>
@@ -117,6 +119,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <label>
             <span>Last Name:</span>
@@ -128,6 +131,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <label>
             <span>Email:</span>
@@ -139,6 +143,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <label>
             <span>Phone:</span>
@@ -150,6 +155,7 @@ function DonationForm() {
             />
           </label>
         </div>
+        <p></p>
         <div className="form-group">
           <CategoriesOfDonations
             donationCategory={category}
@@ -158,7 +164,7 @@ function DonationForm() {
         </div>
         <p></p>
         <div className="form-group">
-          <button type="submit" className="submit-button">
+          <button type="submit" className="submit_s">
             Submit
           </button>
         </div>

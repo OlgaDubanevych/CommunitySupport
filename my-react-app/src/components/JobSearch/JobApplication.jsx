@@ -32,6 +32,7 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
         setFormData({ ...initialFormData }); // Clear form fields
         setTimeout(() => {
           setShowMessage(false);
+          onCancelClick();
         }, 4000);
       } else {
         console.error(
@@ -133,8 +134,11 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
           </label>
           <br />
           <p></p>
-          <button type="submit" className="submit">
+          <button type="submit" className="submit_s">
             Apply Now
+          </button>
+          <button type="button" onClick={onCancelClick} className="submit_s">
+            Cancel
           </button>
         </form>
         {showMessage && (

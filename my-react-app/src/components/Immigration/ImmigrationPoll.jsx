@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Bar } from "react-chartjs-2";
 import "chart.js/auto";
 import "../Pages/JobSearchPage.css";
@@ -8,19 +8,23 @@ function ImmigrationPoll() {
   const [selectedOption, setSelectedOption] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [chartData, setChartData] = useState(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
     const data = {
       labels: pollOptions.map((option) => option.label),
       datasets: [
         {
-          label: "Votes",
+          label: "Percentage",
           backgroundColor: "#BE212F",
-          data: pollOptions.map((option) => pollData[option.name] || 0),
+          data: calculatePercentages(pollData),
         },
       ],
     };
     setChartData(data);
+    if (chartRef.current && chartRef.current.chartInstance) {
+      chartRef.current.chartInstance.canvas.style.height = "50px"; // Adjust the height as needed
+    }
   }, [pollData]);
 
   const handleOptionChange = (event) => {
@@ -56,6 +60,16 @@ function ImmigrationPoll() {
     }
   };
 
+  const calculatePercentages = (data) => {
+    const totalVotes = Object.values(data).reduce(
+      (a, b) => parseInt(a) + parseInt(b),
+      0
+    );
+    return pollOptions.map((option) =>
+      totalVotes ? ((data[option.name] || 0) / totalVotes) * 100 : 0
+    );
+  };
+
   const totalVotes = Object.values(pollData).reduce(
     (a, b) => parseInt(a) + parseInt(b),
     0
@@ -73,6 +87,20 @@ function ImmigrationPoll() {
     { name: "daycare", label: "Daycare/Child Support" },
     { name: "other", label: "Other" },
   ];
+
+  const chartOptions = {
+    maintainAspectRatio: true,
+    indexAxis: "y", // Set to 'y' for horizontal bars
+    scales: {
+      x: {
+        beginAtZero: true,
+        max: 100,
+        ticks: {
+          callback: (value) => `${value}%`,
+        },
+      },
+    },
+  };
 
   return (
     <div className="text">
@@ -107,7 +135,9 @@ function ImmigrationPoll() {
           <div className="results">
             <p className="other_text">Thank you for your opinion!</p>
             <h3 className="other_text">Poll Results:</h3>
-            {chartData && <Bar data={chartData} />}
+            {chartData && (
+              <Bar ref={chartRef} data={chartData} options={chartOptions} />
+            )}
             <p className="text">Total Votes: {totalVotes}</p>
           </div>
         )}
