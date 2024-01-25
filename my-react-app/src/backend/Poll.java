@@ -1,16 +1,12 @@
 package backend;
 
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.*;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.sun.net.httpserver.Headers;
 
 public class Poll {
 
@@ -29,14 +25,22 @@ public class Poll {
             // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
-            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
             headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
             String method = exchange.getRequestMethod();
-            if (method.equals("POST")) {
+            if ("OPTIONS".equals(method)) {
+                // For preflight requests, respond successfully
+                exchange.sendResponseHeaders(200, -1);
+                return;
+            }
+
+            if ("POST".equals(method)) {
                 handlePoll(exchange);
-            } else if (method.equals("GET")) {
+            } else if ("GET".equals(method)) {
                 handleGetPollResults(exchange);
+            } else if ("DELETE".equals(method)) {
+                handleDeletePollOption(exchange);
             } else {
                 sendResponse(exchange, 400, "Bad Request");
             }
@@ -54,7 +58,9 @@ public class Poll {
         }
 
         private void handlePollVote(HttpExchange exchange, String selectedOption) throws IOException {
-            pollData.compute(selectedOption, (key, value) -> (value == null) ? 1 : value + 1);
+            synchronized (pollData) {
+                pollData.compute(selectedOption, (key, value) -> (value == null) ? 1 : value + 1);
+            }
             sendResponse(exchange, 200, "Poll vote submitted successfully");
         }
 
@@ -62,8 +68,10 @@ public class Poll {
             try {
                 // Convert pollData to JSON-like string manually
                 StringBuilder json = new StringBuilder("{");
-                for (Map.Entry<String, Integer> entry : pollData.entrySet()) {
-                    json.append("\"").append(entry.getKey()).append("\":").append(entry.getValue()).append(",");
+                synchronized (pollData) {
+                    for (Map.Entry<String, Integer> entry : pollData.entrySet()) {
+                        json.append("\"").append(entry.getKey()).append("\":").append(entry.getValue()).append(",");
+                    }
                 }
                 if (!pollData.isEmpty()) {
                     json.setLength(json.length() - 1); // Remove the trailing comma
@@ -73,6 +81,20 @@ public class Poll {
                 sendResponse(exchange, 200, json.toString());
             } catch (Exception e) {
                 sendResponse(exchange, 500, "Internal Server Error");
+            }
+        }
+
+        private void handleDeletePollOption(HttpExchange exchange) throws IOException {
+            // Extract the option to delete from the URL parameter
+            String optionToDelete = exchange.getRequestURI().getQuery().replace("option=", "");
+
+            if (!optionToDelete.isEmpty()) {
+                synchronized (pollData) {
+                    pollData.remove(optionToDelete);
+                }
+                sendResponse(exchange, 200, "Poll option deleted successfully");
+            } else {
+                sendResponse(exchange, 400, "Invalid option to delete");
             }
         }
 

@@ -42,7 +42,15 @@ public class Consultants {
                 return;
             }
 
-            if ("POST".equals(exchange.getRequestMethod())) {
+            if ("DELETE".equals(exchange.getRequestMethod())) {
+                String path = exchange.getRequestURI().getPath();
+                if (path.matches("/api/consultants/\\d+")) {
+                    String consultantId = path.replaceAll("/api/consultants/(\\d+)", "$1");
+                    handleDeleteRequest(exchange, consultantId);
+                } else {
+                    sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid DELETE request");
+                }
+            } else if ("POST".equals(exchange.getRequestMethod())) {
                 String path = exchange.getRequestURI().getPath();
 
                 if ("/api/consultants".equals(path)) {
@@ -58,6 +66,17 @@ public class Consultants {
                 sendResponse(exchange, HttpURLConnection.HTTP_BAD_METHOD, "Method Not Allowed");
             }
         }
+
+        private void handleDeleteRequest(HttpExchange exchange, String consultantId) throws IOException {
+            Consultant consultant = findConsultantById(Integer.parseInt(consultantId));
+            if (consultant != null) {
+                consultants.remove(consultant);
+                sendResponse(exchange, HttpURLConnection.HTTP_OK, convertConsultantsToJson());
+            } else {
+                sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND, "Consultant not found");
+            }
+        }
+
 
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());

@@ -42,19 +42,30 @@ public class Jobs {
                 return;
             }
 
-            if ("POST".equals(exchange.getRequestMethod())) {
+            if ("DELETE".equals(exchange.getRequestMethod())) {
                 String path = exchange.getRequestURI().getPath();
-
-                // Check if the request is for posting a job
-                if ("/api/jobs".equals(path)) {
-                    handlePostRequest(exchange);
+                if (path.matches("/api/jobs/\\d+")) {
+                    String jobId = path.replaceAll("/api/jobs/(\\d+)", "$1");
+                    handleDeleteRequest(exchange, jobId);
                 } else {
-                    sendResponse(exchange, 404, "Not Found");
+                    sendResponse(exchange, 400, "Invalid DELETE request");
                 }
+            } else if ("POST".equals(exchange.getRequestMethod())) {
+                handlePostRequest(exchange);
             } else if ("GET".equals(exchange.getRequestMethod())) {
                 handleGetRequest(exchange);
             } else {
                 sendResponse(exchange, 405, "Method Not Allowed");
+            }
+        }
+
+        private void handleDeleteRequest(HttpExchange exchange, String jobId) throws IOException {
+            JobPost jobPost = findJobPostById(jobId);
+            if (jobPost != null) {
+                jobPosts.remove(jobPost);
+                sendResponse(exchange, 200, convertJobPostsToJson());
+            } else {
+                sendResponse(exchange, 404, "Job post not found");
             }
         }
 
@@ -171,6 +182,15 @@ public class Jobs {
         private String convertJobPostsToJson() {
             return convertJobPostsToJson(jobPosts);
         }
+
+        private static JobPost findJobPostById(String jobId) {
+            for (JobPost jobPost : jobPosts) {
+                if (jobPost.getId().equals(jobId)) {
+                    return jobPost;
+                }
+            }
+            return null;
+        }
     }
 
     private static class JobPost {
@@ -216,6 +236,10 @@ public class Jobs {
 
         public String getLocation() {
             return location;
+        }
+
+        public String getId() {
+            return id;
         }
     }
 }

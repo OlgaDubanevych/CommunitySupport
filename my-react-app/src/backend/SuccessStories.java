@@ -1,8 +1,9 @@
 package backend;
 
+import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,14 +13,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
 public class SuccessStories {
 
     private static final List<SuccessStory> successStories = new ArrayList<>();
     private static int storyIdCounter = 1;
 
     public static void main(String[] args) throws IOException {
-        com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(7000), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
         server.createContext("/api/stories", new StoriesHandler());
         server.setExecutor(null);
         server.start();
@@ -32,7 +32,7 @@ public class SuccessStories {
             // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
-            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE");
             headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
@@ -41,19 +41,30 @@ public class SuccessStories {
                 return;
             }
 
-            if ("POST".equals(exchange.getRequestMethod())) {
+            if ("DELETE".equals(exchange.getRequestMethod())) {
                 String path = exchange.getRequestURI().getPath();
-
-                // Check if the request is for posting a success story
-                if ("/api/stories".equals(path)) {
-                    handlePostRequest(exchange);
+                if (path.matches("/api/stories/\\d+")) {
+                    String storyId = path.replaceAll("/api/stories/(\\d+)", "$1");
+                    handleDeleteRequest(exchange, storyId);
                 } else {
-                    sendResponse(exchange, 404, "Not Found");
+                    sendResponse(exchange, 400, "Invalid DELETE request");
                 }
+            } else if ("POST".equals(exchange.getRequestMethod())) {
+                handlePostRequest(exchange);
             } else if ("GET".equals(exchange.getRequestMethod())) {
                 handleGetRequest(exchange);
             } else {
                 sendResponse(exchange, 405, "Method Not Allowed");
+            }
+        }
+
+        private void handleDeleteRequest(HttpExchange exchange, String storyId) throws IOException {
+            SuccessStory story = findStoryById(storyId);
+            if (story != null) {
+                successStories.remove(story);
+                sendResponse(exchange, 200, convertStoriesToJson());
+            } else {
+                sendResponse(exchange, 404, "Story not found");
             }
         }
 
@@ -111,6 +122,15 @@ public class SuccessStories {
 
             return json.toString();
         }
+
+        private SuccessStory findStoryById(String storyId) {
+            for (SuccessStory story : successStories) {
+                if (story.getId().equals(storyId)) {
+                    return story;
+                }
+            }
+            return null;
+        }
     }
 
     private static class SuccessStory {
@@ -128,9 +148,12 @@ public class SuccessStories {
             this.story = story;
         }
 
+        public String getId() {
+            return id;
+        }
+
         public String toJson() {
             return String.format("{\"id\":\"%s\",\"firstName\":\"%s\",\"lastName\":\"%s\",\"email\":\"%s\",\"story\":\"%s\"}", id, firstName, lastName, email, story);
         }
     }
 }
-

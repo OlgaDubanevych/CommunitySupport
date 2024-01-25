@@ -8,9 +8,7 @@ function QuestionForms({ addQuestion }) {
 
   const handleChange = (event) => {
     const { value, type, checked } = event.target;
-    type === "checkbox"
-      ? setQuestionCategory(checked)
-      : setQuestionCategory(value);
+    setQuestionCategory(type === "checkbox" ? checked : value || "Other");
   };
 
   const handleSubmit = async (event) => {
@@ -73,6 +71,7 @@ function QuestionForms({ addQuestion }) {
           onChange={handleChange}
           name="category"
         >
+          <option value="OTHER">Other</option> {/* Default option */}
           <option value="JOB_SEARCH">Job Search/Career</option>
           <option value="IMMIGRATION">Immigration</option>
           <option value="EDUCATION_COLLEGE_UNIVERSITY">
@@ -86,7 +85,6 @@ function QuestionForms({ addQuestion }) {
           <option value="FAMILY_RELATIONSHIPS">Family/Relationships</option>
           <option value="REAL_ESTATE"> Real Estate/ Rent</option>
           <option value="ENTERTAINMENT">Entertainment</option>
-          <option value="OTHER">Other</option>
         </select>
         <p>
           <button className="text-submit" type="submit">

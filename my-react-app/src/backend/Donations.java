@@ -53,12 +53,19 @@ public class Donations {
                 return;
             }
 
-            if ("POST".equals(exchange.getRequestMethod())) {
+            if ("DELETE".equals(exchange.getRequestMethod())) {
+                String path = exchange.getRequestURI().getPath();
+                if (path.matches("/api/donations/\\d+")) {
+                    String donationId = path.replaceAll("/api/donations/(\\d+)", "$1");
+                    handleDeleteRequest(exchange, donationId);
+                } else {
+                    sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid DELETE request");
+                }
+            } else if ("POST".equals(exchange.getRequestMethod())) {
                 String path = exchange.getRequestURI().getPath();
 
                 if ("/api/donations".equals(path)) {
                     handlePostRequest(exchange);
-
                 } else if (path.matches("/api/donations/\\d+/recommend")) {
                     handleRecommendationPostRequest(exchange);
                 } else if (path.matches("/api/donations/\\d+/message")) {
@@ -72,6 +79,17 @@ public class Donations {
                 sendResponse(exchange, HttpURLConnection.HTTP_BAD_METHOD, "Method Not Allowed");
             }
         }
+
+        private void handleDeleteRequest(HttpExchange exchange, String donationId) throws IOException {
+            Donation donation = findDonationById(Integer.parseInt(donationId));
+            if (donation != null) {
+                donations.remove(donation);
+                sendResponse(exchange, HttpURLConnection.HTTP_OK, convertDonationsToJson());
+            } else {
+                sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND, "Donation not found");
+            }
+        }
+
 
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
