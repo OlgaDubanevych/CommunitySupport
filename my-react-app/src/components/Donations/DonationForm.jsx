@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import CategoriesOfDonations from "./CategoriesOfDonations"; // Import the CategoriesOfDonations component
+import CategoriesOfDonations from "./CategoriesOfDonations";
 import "./Donations.css";
 
 function DonationForm() {
@@ -40,7 +40,7 @@ function DonationForm() {
       lastName,
       email,
       phone,
-      category: Category[category], // Convert string to enum
+      category: Category[category],
     };
 
     try {
@@ -54,7 +54,6 @@ function DonationForm() {
         body: JSON.stringify(donationData),
       });
 
-      // Reset form fields after successful submission
       if (response.ok) {
         const responseData = await response.json();
         console.log("Received data from backend:", responseData);

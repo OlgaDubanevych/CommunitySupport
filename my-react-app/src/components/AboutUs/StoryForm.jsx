@@ -19,7 +19,7 @@ const StoryForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:7000/api/stories", {
+      const response = await fetch("http://192.168.5.50:7000/api/stories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -31,13 +31,11 @@ const StoryForm = () => {
         console.log("Success story submitted!");
         setSubmitted(true);
 
-        // Reset form fields after successful submission
         setFirstName("");
         setLastName("");
         setEmail("");
         setStory("");
 
-        // Set a timeout to clear the "Thank you" message after 5 seconds
         setTimeout(() => {
           setSubmitted(false);
         }, 4000);

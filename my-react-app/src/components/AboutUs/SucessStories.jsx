@@ -7,7 +7,7 @@ function SuccessStories() {
 
   const fetchStories = async () => {
     try {
-      const response = await fetch("http://localhost:7000/api/stories");
+      const response = await fetch("http://192.168.5.50:7000/api/stories");
 
       if (response.ok) {
         const storiesData = await response.json();
@@ -23,17 +23,14 @@ function SuccessStories() {
   };
 
   useEffect(() => {
-    // Fetch stories initially
     fetchStories();
 
-    // Set up an interval to poll for new stories
-    const intervalId = setInterval(fetchStories, 5000); // Adjust the interval as needed
-
-    // Clean up the interval on component unmount
+    const intervalId = setInterval(fetchStories, 5000);
+    //
     return () => {
       clearInterval(intervalId);
     };
-  }, []); // Empty dependency array to run the effect only once
+  }, []);
 
   return (
     <div>

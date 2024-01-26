@@ -48,7 +48,6 @@ public class JobApplication {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract job application properties
             Map<String, String> applicationData = new HashMap<>();
             applicationData.put("jobTitle", extractValue(requestBody, "jobTitle"));
             applicationData.put("firstName", extractValue(requestBody, "firstName"));
@@ -58,7 +57,6 @@ public class JobApplication {
             applicationData.put("resume", extractValue(requestBody, "resume"));
             applicationData.put("coverLetter", extractValue(requestBody, "coverLetter"));
 
-            // Process the received data or save it to a database
             jobApplications.add(applicationData);
 
             sendResponse(exchange, 200, "Application submitted successfully!");
@@ -71,7 +69,6 @@ public class JobApplication {
         }
 
         private void handleGetRequest(HttpExchange exchange) throws IOException {
-            // Send back the list of job applications
             sendResponse(exchange, 200, convertApplicationsToJson());
         }
 
@@ -89,28 +86,24 @@ public class JobApplication {
         }
 
         private String convertApplicationsToJson() {
-            // Convert the list of job applications to JSON-like format
             StringBuilder json = new StringBuilder("[");
             for (Map<String, String> application : jobApplications) {
-                // Customize the order of properties based on your desired sequence
                 String[] orderedProperties = {"jobTitle", "firstName", "lastName", "email", "phone", "resume", "coverLetter"};
 
-                // Use LinkedHashMap to maintain the order of entries
                 Map<String, String> orderedApplication = new LinkedHashMap<>();
                 for (String property : orderedProperties) {
                     orderedApplication.put(property, application.get(property));
                 }
 
-                // Construct JSON response
                 json.append("{");
                 for (Map.Entry<String, String> entry : orderedApplication.entrySet()) {
                     json.append("\"").append(entry.getKey()).append("\":\"").append(entry.getValue()).append("\",");
                 }
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1); 
                 json.append("},");
             }
             if (!jobApplications.isEmpty()) {
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1); 
             }
             json.append("]");
 

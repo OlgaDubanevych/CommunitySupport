@@ -46,7 +46,6 @@ const JobPostingForm = ({ onJobPosted }) => {
       if (response.ok) {
         setSuccess(true);
 
-        // Clear form fields
         setJobPostingDate("");
         setExpiryDate("");
         setCompanyName("");
@@ -59,7 +58,6 @@ const JobPostingForm = ({ onJobPosted }) => {
         setEmail("");
         setPhone("");
 
-        // Notify parent component (Jobs) about the new job
         onJobPosted();
 
         setTimeout(() => {

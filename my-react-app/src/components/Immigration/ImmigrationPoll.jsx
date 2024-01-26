@@ -23,7 +23,7 @@ function ImmigrationPoll() {
     };
     setChartData(data);
     if (chartRef.current && chartRef.current.chartInstance) {
-      chartRef.current.chartInstance.canvas.style.height = "50px"; // Adjust the height as needed
+      chartRef.current.chartInstance.canvas.style.height = "50px";
     }
   }, [pollData]);
 

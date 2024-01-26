@@ -10,14 +10,12 @@ const RecommendationForm = ({ onCancelClick }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Create a mailto link with subject and body
     const subject = encodeURIComponent("Job Recommendation");
     const body = encodeURIComponent(
       `I would like to recommend the job for your consideration.\n\nSincerely,\n${firstName} ${lastName}`
     );
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
-    // Open a new window or tab with the mailto link
     window.open(mailtoLink);
 
     setSubmitted(true);

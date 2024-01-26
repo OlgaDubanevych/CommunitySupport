@@ -1,5 +1,3 @@
-/* Results.css */
-
 .result-list-container {
   display: flex;
   flex-direction: column;
@@ -7,5 +5,4 @@
 
 .result-item-container {
   margin-bottom: 10px;
-  /* Additional styling for each result item container if needed */
 }

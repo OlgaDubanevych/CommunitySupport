@@ -7,21 +7,14 @@ function QuestionDisplay() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Fetch all questions from the Java backend on component mount
     fetchQuestions();
   }, []);
 
-  const fetchQuestions = async () => {
-    // Fetch questions logic here
-  };
+  const fetchQuestions = async () => {};
 
-  const handleLike = async (questionId, liked) => {
-    // Like handling logic here
-  };
+  const handleLike = async (questionId, liked) => {};
 
-  const handleCommentSubmit = async (questionId, inputComment) => {
-    // Comment submission logic here
-  };
+  const handleCommentSubmit = async (questionId, inputComment) => {};
 
   return (
     <div>

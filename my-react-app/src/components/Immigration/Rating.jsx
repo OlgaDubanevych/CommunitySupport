@@ -18,7 +18,7 @@ function Rating({ websiteId, updateAverageRating }) {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            websiteId: websiteId, // Include websiteId in the request body
+            websiteId: websiteId,
             rating: value,
           }),
         }

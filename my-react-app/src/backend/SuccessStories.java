@@ -29,14 +29,12 @@ public class SuccessStories {
     public static class StoriesHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
             headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS, DELETE");
             headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
-                // For preflight requests, respond successfully
                 exchange.sendResponseHeaders(200, -1);
                 return;
             }
@@ -71,7 +69,6 @@ public class SuccessStories {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract success story properties
             Pattern firstNamePattern = Pattern.compile("\"firstName\":\"(.*?)\"");
             Pattern lastNamePattern = Pattern.compile("\"lastName\":\"(.*?)\"");
             Pattern emailPattern = Pattern.compile("\"email\":\"(.*?)\"");
@@ -98,7 +95,6 @@ public class SuccessStories {
         }
 
         private void handleGetRequest(HttpExchange exchange) throws IOException {
-            // Send back the list of all success stories
             sendResponse(exchange, 200, convertStoriesToJson());
         }
 
@@ -110,7 +106,6 @@ public class SuccessStories {
         }
 
         private String convertStoriesToJson() {
-            // Convert the list of success stories to JSON-like format
             StringBuilder json = new StringBuilder("[");
             for (SuccessStory successStory : successStories) {
                 json.append(successStory.toJson()).append(",");

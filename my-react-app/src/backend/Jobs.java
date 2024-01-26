@@ -30,14 +30,12 @@ public class Jobs {
     public static class JobsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
             headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
 
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
-                // For preflight requests, respond successfully
                 exchange.sendResponseHeaders(200, -1);
                 return;
             }
@@ -72,7 +70,6 @@ public class Jobs {
         private void handlePostRequest(HttpExchange exchange) throws IOException {
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract job post properties
             Pattern datePattern = Pattern.compile("\"jobPostingDate\":\"(.*?)\"");
             Pattern expiryDatePattern = Pattern.compile("\"expiryDate\":\"(.*?)\"");
             Pattern companyNamePattern = Pattern.compile("\"companyName\":\"(.*?)\"");
@@ -120,7 +117,6 @@ public class Jobs {
         }
 
         private void handleGetRequest(HttpExchange exchange) throws IOException {
-            // Extract the search term from the query parameters
             String searchTerm = "";
             String query = exchange.getRequestURI().getQuery();
                if (query != null && query.contains("searchTerm")) {
@@ -130,17 +126,14 @@ public class Jobs {
 
 
             if (searchTerm != null) {
-                // Split the search term into words
                 String[] searchWords = searchTerm.trim().toLowerCase().split("\\s+");
 
-                // Filter jobs based on the search term (case-insensitive and partial match)
                 List<JobPost> filteredJobs = jobPosts.stream()
                         .filter(jobPost -> {
                             String lowerCaseTitle = jobPost.getJobTitle().toLowerCase();
                             String lowerCaseCompany = jobPost.getCompanyName().toLowerCase();
                             String lowerCaseLocation = jobPost.getLocation().toLowerCase();
 
-                            // Check if any of the search words is present in job title, company name, or location
                             return Arrays.stream(searchWords)
                                     .anyMatch(word ->
                                             lowerCaseTitle.contains(word) ||
@@ -150,10 +143,8 @@ public class Jobs {
                         })
                         .collect(Collectors.toList());
 
-                // Send back the list of filtered job posts
                 sendResponse(exchange, 200, convertJobPostsToJson(filteredJobs));
             } else {
-                // Send back the list of all job posts if no search term is provided
                 sendResponse(exchange, 200, convertJobPostsToJson());
             }
         }
@@ -166,13 +157,12 @@ public class Jobs {
         }
 
         private String convertJobPostsToJson(List<JobPost> jobPosts) {
-            // Convert the list of job posts to JSON-like format
             StringBuilder json = new StringBuilder("[");
             for (JobPost jobPost : jobPosts) {
                 json.append(jobPost.toJson()).append(",");
             }
             if (!jobPosts.isEmpty()) {
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1);
             }
             json.append("]");
 

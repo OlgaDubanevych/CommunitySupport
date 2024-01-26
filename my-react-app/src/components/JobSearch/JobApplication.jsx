@@ -29,7 +29,7 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
 
       if (response.ok) {
         setShowMessage(true);
-        setFormData({ ...initialFormData }); // Clear form fields
+        setFormData({ ...initialFormData });
         setTimeout(() => {
           setShowMessage(false);
           onCancelClick();

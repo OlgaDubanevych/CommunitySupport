@@ -1,6 +1,6 @@
 import React from "react";
 import ResultItem from "./QuestionResultItem";
-import "./Results.css"; // Import a CSS file for Results component styles
+import "./Results.css";
 
 export default function Results({ Results, searchInput, selectedCategory }) {
   const hasComments = (comments) => comments.length > 0;

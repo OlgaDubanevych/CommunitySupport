@@ -12,16 +12,13 @@ public class JavaBackend {
 
     public static void main(String[] args) {
         try {
-            // Configure the logger
             ConsoleHandler consoleHandler = new ConsoleHandler();
             consoleHandler.setLevel(Level.ALL);
             logger.addHandler(consoleHandler);
             logger.setLevel(Level.ALL);
 
-            // Create the main server on port 7000
             HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
 
-            // Create a context 
             server.createContext("/api/questions", new Questions.QuestionsHandler());
             server.createContext("/api/jobs", new Jobs.JobsHandler());
             server.createContext("/api/applications", new JobApplication.ApplicationsHandler());
@@ -31,7 +28,6 @@ public class JavaBackend {
             server.createContext("/api/websites", new Websites.WebsiteHandler());
             server.createContext("/api/poll", new Poll.PollHandler());
 
-            // Start the server
             server.setExecutor(null);
             server.start();
             logger.info("Server is running on port 7000");

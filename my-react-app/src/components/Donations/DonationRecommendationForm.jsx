@@ -14,20 +14,18 @@ const DonationRecommendationForm = ({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Create a mailto link with subject and body
     const subject = encodeURIComponent("Donation Recommendation");
     const body = encodeURIComponent(
       `I would like to recommend this donation for your consideration.\n\nItem Name: ${donation.itemName}\nDescription: ${donation.itemDescription}\n\nSincerely,\n${firstName} ${lastName}`
     );
     const mailtoLink = `mailto:${email}?subject=${subject}&body=${body}`;
 
-    // Open a new window or tab with the mailto link
     window.open(mailtoLink);
 
     setSubmitted(true);
     setTimeout(() => {
       setSubmitted(false);
-      onCancelClick(); // Close the recommendation form
+      onCancelClick();
     }, 4000);
   };
 

@@ -105,7 +105,6 @@ public class Websites {
               Website[] websitesArray = Website.fromJsonArray(requestBody);
           
               for (Website website : websitesArray) {
-                // Update the backend with the received data
                 updateBackend(website.getId(), website.getAverageRating());
               }
           
@@ -115,15 +114,11 @@ public class Websites {
             }
           }
           
-        // Add a method to update the backend with the received data
+      
         private void updateBackend(String websiteId, double averageRating) {
-            // Add your logic to update the backend with websiteId and averageRating
-            // This might involve updating your existing data structures or database
             Website website = findWebsiteById(Integer.parseInt(websiteId));
             if (website != null) {
-                // Update the average rating in the backend
                 website.setAverageRating(averageRating);
-                // Optionally, persist the changes to a database or other storage mechanism
             }
         }
         
@@ -155,7 +150,6 @@ public class Websites {
                         int ratingValue = Integer.parseInt(ratingMatcher.group(1));
                         website.addRating(ratingValue);
         
-                        // Update the average rating in the response
                         double updatedAverageRating = website.calculateAverageRating();
                         sendResponse(exchange, HttpURLConnection.HTTP_OK, String.valueOf(updatedAverageRating));
                     } else {
@@ -214,7 +208,6 @@ public class Websites {
                     double averageRating = website.calculateAverageRating();
                     responseText.append(String.format("%d=%s, ", Integer.parseInt(website.getId()), averageRating));
                 }
-                // Remove the trailing comma and space
                 responseText.setLength(responseText.length() - 2);
         
                 sendResponse(exchange, HttpURLConnection.HTTP_OK, responseText.toString());

@@ -27,7 +27,6 @@ const DonationSearch = ({ onSearch }) => {
   };
 
   useEffect(() => {
-    // Fetch donations data from the backend
     const fetchData = async () => {
       try {
         const response = await fetch("http://localhost:7000/api/donations");

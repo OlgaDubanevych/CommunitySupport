@@ -82,14 +82,13 @@ function UsefulLinks() {
   useEffect(() => {
     const sendAllWebsitesToBackend = async () => {
       try {
-        // Delay the initial fetch by a few seconds
         await new Promise((resolve) => setTimeout(resolve, 3000));
         const response = await fetch("http://localhost:7000/api/websites", {
           method: "POST",
           headers: {
-            "Content-Type": "application/json", // Change content type to JSON
+            "Content-Type": "application/json",
           },
-          body: JSON.stringify(links), // Send the entire array as JSON
+          body: JSON.stringify(links),
         });
       } catch (error) {
         console.error("Error during send all websites:", error);
@@ -118,8 +117,8 @@ function UsefulLinks() {
       }
     };
 
-    sendAllWebsitesToBackend(); // Call the function here
-    fetchAllAverageRatings(); // Call the function here
+    sendAllWebsitesToBackend();
+    fetchAllAverageRatings();
   }, [links]);
 
   const updateAverageRating = async (websiteId, averageRating) => {

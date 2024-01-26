@@ -1,4 +1,3 @@
-// Consultants.jsx
 import React, { useState, useEffect } from "react";
 import MessageForm from "./MessageForm";
 import "../Pages/ImmigrationPage.css";
@@ -71,13 +70,11 @@ const Consultants = () => {
 
   const handleMessageSubmit = async (consultantId, messageData) => {
     try {
-      // Fetch the updated consultant after submission
       const updatedConsultantResponse = await fetch(
         `http://localhost:7000/api/consultants/${consultantId}`
       );
       const updatedConsultant = await updatedConsultantResponse.json();
 
-      // Update the state to include the new consultant
       setConsultants((prevConsultants) => [
         updatedConsultant,
         ...prevConsultants.filter(
@@ -91,16 +88,13 @@ const Consultants = () => {
       const consultantInfoArray = await consultantInfoResponse.json();
 
       if (consultantInfoArray.length > 0) {
-        const consultantInfo = consultantInfoArray[0]; // Access the first element
-        // Include consultant email in the message body
+        const consultantInfo = consultantInfoArray[0];
         const emailBody = `Consultant Email: ${consultantInfo.email}\n${messageData.message}`;
 
-        // Create a mailto link with subject and body
         const subject = encodeURIComponent("Consultant Message");
         const body = encodeURIComponent(emailBody);
         const mailtoLink = `mailto:${consultantInfo.email}?subject=${subject}&body=${body}`;
 
-        // Open a new window or tab with the mailto link
         window.open(mailtoLink);
 
         setShowMessageForm((prev) => ({ ...prev, [consultantId]: false }));

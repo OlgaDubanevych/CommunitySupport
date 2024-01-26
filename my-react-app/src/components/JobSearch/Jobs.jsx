@@ -95,7 +95,6 @@ const Jobs = () => {
   }, [showApplicationForm, showRecommendationForm]);
 
   const handleJobPosted = () => {
-    // Fetch the updated list of jobs after a new job is posted
     fetchJobs();
   };
 
@@ -108,6 +107,8 @@ const Jobs = () => {
         jobs.map((job, index) => (
           <div key={index} className="job">
             <h3 className="text">{job.jobTitle}</h3>
+            <p className="other_text">Company: {job.companyName}</p>
+            <p className="other_text">Location: {job.location}</p>
             <p className="other_text">{job.jobDescription}</p>
             <button
               className="submit_c"
@@ -138,7 +139,6 @@ const Jobs = () => {
         ))
       )}
 
-      {/* Render JobPostingForm component */}
       <JobPostingForm onJobPosted={handleJobPosted} />
     </div>
   );

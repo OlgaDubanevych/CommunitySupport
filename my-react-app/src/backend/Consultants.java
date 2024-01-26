@@ -136,15 +136,12 @@ public class Consultants {
                 System.out.println("Received message request for consultant ID: " + consultantId);
                 System.out.println("Request body: " + requestBody);
 
-                // Extract the consultant's email
                 Map<String, String> jsonMap = parseJson(requestBody);
                 String consultantEmail = jsonMap.get("email");
                 System.out.println("Consultant email: " + consultantEmail);
-
-                // Simulating sending an email (replace this with your actual logic)
+               
                 sendEmailToConsultant(consultantEmail, "Your message has been received");
 
-                // Send a response
                 sendResponse(exchange, HttpURLConnection.HTTP_OK, "Message received for consultant ID: " + consultantId);
             } else {
                 sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND, "Consultant not found");
@@ -225,7 +222,7 @@ public class Consultants {
         }
     }
 
-    // Simulated method to send an email (replace this with your actual email logic)
+    
     private static void sendEmailToConsultant(String email, String message) {
         System.out.println("Email sent to " + email + ": " + message);
     }

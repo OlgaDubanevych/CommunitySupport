@@ -15,7 +15,7 @@ const Questions = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:7000/api/questions");
+      const response = await fetch("http://192.168.5.50:7000/api/questions");
 
       if (!response.ok) {
         throw new Error("Failed to fetch questions");
@@ -77,7 +77,7 @@ const Questions = () => {
   const handleCommentSubmit = async (questionId) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/questions/${questionId}/comments`,
+        `http://192.168.5.50:7000/api/questions/${questionId}/comments`,
         {
           method: "POST",
           headers: {
@@ -107,7 +107,7 @@ const Questions = () => {
       const requestBody = JSON.stringify({ liked });
 
       const response = await fetch(
-        `http://localhost:7000/api/questions/likes/${questionId}`,
+        `http://192.168.5.50:7000/api/questions/likes/${questionId}`,
         {
           method: "POST",
           headers: {

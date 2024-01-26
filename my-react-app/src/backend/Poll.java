@@ -22,7 +22,6 @@ public class Poll {
     static class PollHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
             headers.add("Access-Control-Allow-Methods", "GET, POST, DELETE, OPTIONS");
@@ -30,7 +29,6 @@ public class Poll {
 
             String method = exchange.getRequestMethod();
             if ("OPTIONS".equals(method)) {
-                // For preflight requests, respond successfully
                 exchange.sendResponseHeaders(200, -1);
                 return;
             }
@@ -47,7 +45,6 @@ public class Poll {
         }
 
         private void handlePoll(HttpExchange exchange) throws IOException {
-            // Extract the selected option from the URL parameter
             String selectedOption = exchange.getRequestURI().getQuery().replace("option=", "");
 
             if (!selectedOption.isEmpty()) {
@@ -66,7 +63,6 @@ public class Poll {
 
         private void handleGetPollResults(HttpExchange exchange) throws IOException {
             try {
-                // Convert pollData to JSON-like string manually
                 StringBuilder json = new StringBuilder("{");
                 synchronized (pollData) {
                     for (Map.Entry<String, Integer> entry : pollData.entrySet()) {
@@ -74,7 +70,7 @@ public class Poll {
                     }
                 }
                 if (!pollData.isEmpty()) {
-                    json.setLength(json.length() - 1); // Remove the trailing comma
+                    json.setLength(json.length() - 1); 
                 }
                 json.append("}");
 
@@ -85,7 +81,6 @@ public class Poll {
         }
 
         private void handleDeletePollOption(HttpExchange exchange) throws IOException {
-            // Extract the option to delete from the URL parameter
             String optionToDelete = exchange.getRequestURI().getQuery().replace("option=", "");
 
             if (!optionToDelete.isEmpty()) {

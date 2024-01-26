@@ -15,13 +15,13 @@ const Donations = () => {
       const controller = new AbortController();
       const signal = controller.signal;
 
-      const timeoutId = setTimeout(() => controller.abort(), 180000); // Abort fetch after 5 seconds
+      const timeoutId = setTimeout(() => controller.abort(), 180000);
 
       const response = await fetch("http://localhost:7000/api/donations", {
         signal,
       });
 
-      clearTimeout(timeoutId); // Clear the timeout if the fetch is successful
+      clearTimeout(timeoutId);
 
       if (response.ok) {
         const data = await response.json();
@@ -88,13 +88,11 @@ const Donations = () => {
       if (response.ok) {
         console.log("Recommendation submitted successfully");
 
-        // Fetch the updated donation after submission
         const updatedDonationResponse = await fetch(
           `http://localhost:7000/api/donations/${donationId}`
         );
         const updatedDonation = await updatedDonationResponse.json();
 
-        // Update the state to include the new donation
         setDonations((prevDonations) => [
           updatedDonation,
           ...prevDonations.filter((donation) => donation.id !== donationId),
@@ -141,13 +139,11 @@ const Donations = () => {
 
   const handleMessageSubmit = async (donationId, messageData) => {
     try {
-      // Fetch the updated donation after submission
       const updatedDonationResponse = await fetch(
         `http://localhost:7000/api/donations/${donationId}`
       );
       const updatedDonation = await updatedDonationResponse.json();
 
-      // Update the state to include the new donation
       setDonations((prevDonations) => [
         updatedDonation,
         ...prevDonations.filter((donation) => donation.id !== donationId),
@@ -159,16 +155,13 @@ const Donations = () => {
       const donorInfoArray = await donorInfoResponse.json();
 
       if (donorInfoArray.length > 0) {
-        const donorInfo = donorInfoArray[0]; // Access the first element
-        // Include donor email, itemName, and itemDescription in the message body
+        const donorInfo = donorInfoArray[0];
         const emailBody = `Donor Email: ${donorInfo.email}\nItem Name: ${donorInfo.itemName}\nItem Description: ${donorInfo.itemDescription}\n\n${messageData.message}`;
 
-        // Create a mailto link with subject and body
         const subject = encodeURIComponent("Donation Message");
         const body = encodeURIComponent(emailBody);
         const mailtoLink = `mailto:${donorInfo.email}?subject=${subject}&body=${body}`;
 
-        // Open a new window or tab with the mailto link
         window.open(mailtoLink);
 
         setShowMessageForm((prev) => ({ ...prev, [donationId]: false }));

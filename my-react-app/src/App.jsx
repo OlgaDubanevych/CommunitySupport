@@ -1,17 +1,15 @@
 import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar/NavBar"
-import Footer from "./components/Footer/Footer"
+import NavBar from "./components/NavBar/NavBar";
+import Footer from "./components/Footer/Footer";
 import SideMenu from "./components/NavBar/Sidemenu/SideMenu";
 import BackDrop from "./components/NavBar/Backdrop/BackDrop";
 import AboutUs from "./components/Pages/AboutUs";
 import DiscussionPage from "./components/Pages/DiscussionPage";
 import DonationsPage from "./components/Pages/DonationsPage";
-import JobSearchPage from "./components/Pages/JobSearchPage"
+import JobSearchPage from "./components/Pages/JobSearchPage";
 import ImmigrationPage from "./components/Pages/ImmigrationPage";
 import "./styles.css";
-
-
 
 const App = () => {
   const [sideMenuOpen, setSideMenuOpen] = useState(false);

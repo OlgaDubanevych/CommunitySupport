@@ -1,4 +1,3 @@
-// MessageForm.jsx
 import React, { useState } from "react";
 import "../Pages/ImmigrationPage.css";
 
