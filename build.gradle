@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+    }
+}
+
+application {
+    mainClassName = 'backend.JavaBackend'
+}
+
+jar {
+    manifest {
+        attributes(
+            'Main-Class': 'backend.JavaBackend'
+        )
+    }
+}
+
+dependencies {
+    implementation 'com.google.guava:guava:30.1-jre'
+    // Add other dependencies as needed
+}

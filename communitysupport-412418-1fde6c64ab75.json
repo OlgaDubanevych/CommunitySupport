@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "communitysupport-412418",
+  "private_key_id": "1fde6c64ab75d0f86bc2f13489d6d340e991ebaa",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDBq1X/KDDqOVxq\nSjyThmXbb58LVdg2yfbWkscdmg06SVTDdfoXIj/QK4LOfiK0H9kfIvW0vxPXfE8T\ntipueejMvEcDt48ZfclZz5iV+16hMcp/qbStO0P5D9L3zJqxiv484GrqE4CfH7xg\n3O/0aXMi5rAn364sbv5pYdfWvK90vDQfnsIiIfI6adnPOL0AFEh15q/AB9svmgtg\nf9MtuSxUeA82LaAWaIApkOWQZ9Yr7zqrfRNaVAEfLz+k5OpKg2RMbLsB+R2IB941\n4pqVwUcPtErOuOkWkVmroupjOJL+ASkT3If9nbBsUqEXwOVWMruGQhri2bgDYXXF\nzVs8tDNlAgMBAAECggEAG+IKnhNPw5EhnI32nbjGVmsCJ3QjDnRSbP8x2rGwwNkI\n8qE8MfN044g4K3mejnddX629WVn/RdF4YxqhjklP+pYK1V6qpB1njV4llkZcD/Im\nuO2afSxgs22TTqjvBqu/wcz/p5bKOF6t1PZKN9KsyHQVHZCHN499Yne7RwfgbPph\nIC+zCYYKTVmbT/CW+2da6Xa4pTrtBiG0XusSkNUh84XUUuUBlr+kjfbG7nb9FV9Z\nQpQJ72lsRjfNS5U8kkUIRlZYR7lVxHEiq4qe6r9jze/c8i0z6bmAMGeLhIYBNotS\nFqzquS0xHh4G5+lISvb5uBW/EvQMb3GgLTg9FKd4CwKBgQD7ogEw24ilOlLWFsg7\nw+Ypu6s2Ngmk7k5aRtJeL18uEXu4v2FyVMu+esPNI2UORTX/6m7pWSl4up5bbkNv\nUcdgQpiQrax2DhQgjF/ga+nlTH3qQ6OgHmzdb0FWwlkTbItApHNCcw6TnoNXS0SP\nQQRYuL+llE9jjuP5Qe8r/jl0KwKBgQDFB80mc+SVArJu8XWKM8YWyGerTLbjwotX\nqGCs0cFiSqSLS/Yf5hIljR8yyokbpYqx/F7TbdT7W+wpZuyTjXsB3xRo5JGHJ7gM\nYS78mUMsmlkDhYfb+FymZqHafoYbXrXFpxJN2sMklRLb3QDzKvlhIe4xg1y5iLAf\nzBE871JerwKBgFLmWYwWF1uP7nB3yvndnTtMh6hxfxXmKMwXHwFGjA3qVp9T9a+r\n/f/ABDfWHFnqNVMdkfKwnDgZC0jF99N51ryA1DB99x5hnwHmHUQbaVBQtf7yz7pV\nq7n8CEOj/aKnlOz0AMD4lOnPRCgDNRAY9GyiWQkc5la/YZ3hugD9XUJHAoGAK9MF\nZYUnlaFI8PZSD5BeghjHPknM8DIIblHsVuQ84FD78mPN9eBlruaJxvFXt8eFZvtc\nWCi408PpbngPLO6uKodk8cPNPsOt40sGeXbZgyU9oVPlGR9P9E8ltwSnbZUOV01G\n+/wppYxm6nJo0K2BVIKIiYjPahEmI5xvRR9yMc8CgYB7CRz87SFyzXyPRS9AkpEA\nyOekJKhz5e3dZ9fSc0V8Kna1suBu8Ja91RSo2FJGZgoCUsL8lALPo5FOh7xaGslr\nrzuEkhyP1C7bD/zBXJD4jW1i2Bs6oignZvJZxiETb49FZm0y4JjMmx4Be+La75VP\nizl2sNAQtqhz1WUeSKB9UQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "olga-dubanevych-community-supp@communitysupport-412418.iam.gserviceaccount.com",
+  "client_id": "106723006761978559150",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/olga-dubanevych-community-supp%40communitysupport-412418.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

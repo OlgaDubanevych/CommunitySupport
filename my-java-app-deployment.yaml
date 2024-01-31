@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-java-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-java-app
+  template:
+    metadata:
+      labels:
+        app: my-java-app
+    spec:
+      containers:
+        - name: backend-image
+          image: gcr.io/communitysupport-412418/backend-image:latest
+          ports:
+            - containerPort: 7000
+          env:
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: communitysupport-412418-1fde6c64ab75.json
+      imagePullSecrets:
+        - name: my-service-account-secret
