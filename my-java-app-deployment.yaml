@@ -19,6 +19,4 @@ spec:
             - containerPort: 7000
           env:
             - name: GOOGLE_APPLICATION_CREDENTIALS
-              value: communitysupport-412418-1fde6c64ab75.json
-      imagePullSecrets:
-        - name: my-service-account-secret
+              value: /app/communitysupport-412418-1fde6c64ab75.json

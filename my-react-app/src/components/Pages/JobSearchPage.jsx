@@ -1,5 +1,4 @@
 import React from "react";
-import "../JobSearch/JobSearch";
 import SearchJobAds from "../JobSearch/SearchJobPostings";
 import Intro from "../JobSearch/Text";
 import JobPostingForm from "../JobSearch/PostYourJob";

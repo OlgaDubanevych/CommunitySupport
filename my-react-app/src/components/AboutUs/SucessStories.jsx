@@ -7,7 +7,7 @@ function SuccessStories() {
 
   const fetchStories = async () => {
     try {
-      const response = await fetch("http://192.168.5.50:7000/api/stories");
+      const response = await fetch("http://localhost:7000/api/stories");
 
       if (response.ok) {
         const storiesData = await response.json();

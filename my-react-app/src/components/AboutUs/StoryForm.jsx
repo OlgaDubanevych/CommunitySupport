@@ -19,7 +19,7 @@ const StoryForm = () => {
     };
 
     try {
-      const response = await fetch("http://192.168.5.50:7000/api/stories", {
+      const response = await fetch("http://localhost:7000/api/stories", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,4 +1,3 @@
-// QuestionForms component
 import React, { useState } from "react";
 import "./QuestionForms.css";
 
@@ -15,7 +14,7 @@ function QuestionForms({ addQuestion }) {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://192.168.5.50:7000/api/questions", {
+      const response = await fetch("http://localhost:7000/api/questions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,16 +29,13 @@ function QuestionForms({ addQuestion }) {
         throw new Error("Failed to submit question");
       }
 
-      // Assuming the backend responds with the new question data
       const newQuestion = await response.json();
 
       console.log("Response from the server:", newQuestion);
 
-      // Reset the form state
       setQuestionText("");
       setQuestionCategory("Other");
 
-      // Call the provided addQuestion function to update the question list
       addQuestion(newQuestion);
     } catch (error) {
       console.error("Error submitting question:", error);
