@@ -13,19 +13,28 @@ import java.util.regex.Pattern;
 
 public class Questions {
     private static final List<Question> questions = new ArrayList<>();
-    private static int questionIdCounter = 1;
-
+    private static int questionIdCounter = 2;
+    static {
+        Question initialQuestion = new Question(
+                "1",
+                "My husband, our 2-year-old daughter and I are planning to come to Canada using a CUAET Visa (Canada-Ukraine authorization for emergency travel). Does someone have experience applying for this program or know people who used it? Are there any tips regarding the application process, and what to do before and after arriving in Canada? Do you know any immigration consultants who might help? What were your experiences of being a newcomer with little children?",
+                QuestionCategory.IMMIGRATION,
+                false
+        );
+        initialQuestion.addComment("One of my friends actually used CUAET. She is already in Canada. Her contact details: a.alladina@gmail.com, (613) 208 - 58374. I'm sure she would be happy to answer your questions!");
+        initialQuestion.addComment("I have helped many clients come to Canada by applying through CUAET. Would be happy to provide my consultation: (416) 574 8294, matthew.chau@gmail.com");
+        questions.add(initialQuestion);
+    }
+    
     public static class QuestionsHandler implements HttpHandler {
         @Override
         public void handle(HttpExchange exchange) throws IOException {
-            // Enable CORS
             Headers headers = exchange.getResponseHeaders();
             headers.add("Access-Control-Allow-Origin", "*");
             headers.add("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
             headers.add("Access-Control-Allow-Headers", "Content-Type,Authorization");
         
             if ("OPTIONS".equals(exchange.getRequestMethod())) {
-                // For preflight requests, respond successfully
                 exchange.sendResponseHeaders(200, -1);
                 return;
             }
@@ -39,14 +48,11 @@ public class Questions {
                     sendResponse(exchange, 400, "Invalid DELETE request");
                 }
             } else if ("POST".equals(exchange.getRequestMethod())) {
-                // Check if the request is for posting a question, a comment, or updating likes
                 String path = exchange.getRequestURI().getPath();
                 if (path.matches("/api/questions/\\d+/comments")) {
-                    // Extract question ID from the path
                     String questionId = path.replaceAll("/api/questions/(\\d+)/comments", "$1");
                     handleCommentPostRequest(exchange, questionId);
                 } else if (path.matches("/api/questions/likes/\\d+")) {
-                    // Extract question ID from the path
                     String questionId = path.replaceAll("/api/questions/likes/(\\d+)", "$1");
                     handleLikePostRequest(exchange, questionId);
                 } else {
@@ -70,10 +76,8 @@ public class Questions {
         }
 
         private void handlePostRequest(HttpExchange exchange) throws IOException {
-            // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract the text, category, and comment properties
             Pattern textPattern = Pattern.compile("\"text\":\"(.*?)\"");
             Pattern categoryPattern = Pattern.compile("\"category\":\"(.*?)\"");
             Pattern commentPattern = Pattern.compile("\"comment\":\"(.*?)\"");
@@ -88,91 +92,70 @@ public class Questions {
 
                 String comment = commentMatcher.find() ? commentMatcher.group(1) : "";
 
-                // Create a new question with the provided text, category, and comment
                 Question newQuestion = new Question(String.valueOf(questionIdCounter++), text, category, false);
 
-                // Add the comment only if it is present
                 if (!comment.isEmpty()) {
                     newQuestion.addComment(comment);
                 }
 
                 questions.add(newQuestion);
 
-                // Send back the updated list of questions
                 sendResponse(exchange, 200, convertQuestionsToJson());
             } else {
-                // Handle regex match failure
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
 
         private void handleCommentPostRequest(HttpExchange exchange, String questionId) throws IOException {
-            // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract the comment property
             Pattern commentPattern = Pattern.compile("\"comment\":\"(.*?)\"");
             Matcher commentMatcher = commentPattern.matcher(requestBody);
 
             if (commentMatcher.find()) {
                 String comment = commentMatcher.group(1);
 
-                // Find the question with the specified ID
                 Question question = findQuestionById(questionId);
                 if (question != null) {
-                    // Add the comment to the question
                     question.addComment(comment);
-
-                    // Send back the updated list of questions
                     sendResponse(exchange, 200, convertQuestionsToJson());
                 } else {
-                    // Handle question not found
                     sendResponse(exchange, 404, "Question not found");
                 }
             } else {
-                // Handle regex match failure
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
 
         private void handleLikePostRequest(HttpExchange exchange, String questionId) throws IOException {
-            // Read the request body
             String requestBody = new String(exchange.getRequestBody().readAllBytes());
 
-            // Use regex to extract the liked property
             Pattern likedPattern = Pattern.compile("\"liked\":(true|false)");
             Matcher likedMatcher = likedPattern.matcher(requestBody);
 
             if (likedMatcher.find()) {
                 boolean liked = Boolean.parseBoolean(likedMatcher.group(1));
 
-                // Find the question with the specified ID
                 Question question = findQuestionById(questionId);
                 if (question != null) {
-                    // Update the like status of the question
                     question.setLiked(liked);
 
-                    // Update the likes count
                     if (liked) {
                         question.setLikes(question.getLikes() + 1);
                     } else {
                         question.setLikes(question.getLikes() - 1);
                     }
 
-                    // Send back the updated list of questions
                     sendResponse(exchange, 200, convertQuestionsToJson());
                 } else {
-                    // Handle question not found
                     sendResponse(exchange, 404, "Question not found");
                 }
             } else {
-                // Handle regex match failure
                 sendResponse(exchange, 400, "Invalid JSON format");
             }
         }
 
         private void handleGetRequest(HttpExchange exchange) throws IOException {
-            // Send back the list of questions
             sendResponse(exchange, 200, convertQuestionsToJson());
         }
 
@@ -184,7 +167,6 @@ public class Questions {
         }
 
         private String convertQuestionsToJson() {
-            // Convert questions list to JSON
             StringBuilder json = new StringBuilder("[");
             for (Question question : questions) {
                 json.append("{\"id\":\"").append(question.getId())
@@ -196,7 +178,7 @@ public class Questions {
                         .append("},");
             }
             if (!questions.isEmpty()) {
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1);
             }
             json.append("]");
 
@@ -204,13 +186,12 @@ public class Questions {
         }
 
         private String convertCommentsToJson(List<String> comments) {
-            // Convert comments list to JSON
             StringBuilder json = new StringBuilder("[");
             for (String comment : comments) {
                 json.append("\"").append(comment).append("\",");
             }
             if (!comments.isEmpty()) {
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1); 
             }
             json.append("]");
 
@@ -233,7 +214,7 @@ public class Questions {
         private boolean liked;
         private int likes = 0;
         private List<String> comments = new ArrayList<>();
-        private QuestionCategory category; // Use the enum for category
+        private QuestionCategory category; 
 
         public Question(String id, String text, QuestionCategory category, boolean liked) {
             this.id = id;

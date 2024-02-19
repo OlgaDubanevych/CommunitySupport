@@ -16,7 +16,18 @@ import java.util.regex.Pattern;
 public class SuccessStories {
 
     private static final List<SuccessStory> successStories = new ArrayList<>();
-    private static int storyIdCounter = 1;
+    private static int storyIdCounter = 2;
+
+    static {
+        SuccessStory initialStory = new SuccessStory(
+                "1",
+                "Anna",
+                "Kim",
+                "anna.kim@example.com",
+                "My Story: I immigrated to Canada from South Korea ten years ago, and I am now a successful entrepreneur with my own fashion boutique in Toronto. Canada's welcoming culture and supportive business environment have allowed me to thrive and grow my business. I am grateful for the opportunities that this country has given me, and I look forward to contributing to its vibrant and diverse community for many years to come."
+        );
+        successStories.add(initialStory);
+    }
 
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
@@ -111,7 +122,7 @@ public class SuccessStories {
                 json.append(successStory.toJson()).append(",");
             }
             if (!successStories.isEmpty()) {
-                json.setLength(json.length() - 1); // Remove the trailing comma
+                json.setLength(json.length() - 1);
             }
             json.append("]");
 

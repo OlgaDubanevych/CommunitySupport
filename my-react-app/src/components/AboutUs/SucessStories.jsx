@@ -26,7 +26,7 @@ function SuccessStories() {
     fetchStories();
 
     const intervalId = setInterval(fetchStories, 5000);
-    //
+
     return () => {
       clearInterval(intervalId);
     };

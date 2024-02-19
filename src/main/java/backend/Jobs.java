@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class Jobs {
 
     private static final List<JobPost> jobPosts = new ArrayList<>();
-    private static int jobIdCounter = 1;
+    private static int jobIdCounter = 2;
 
     public static void main(String[] args) throws IOException {
         com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(7000), 0);
@@ -26,6 +26,24 @@ public class Jobs {
         server.start();
         System.out.println("Server is running on port 7000");
     }
+
+    static {
+        JobPost initialJobPost = new JobPost(
+                "1",
+                "2024-02-01",
+                "2024-03-30",
+                "Professional Litigators LLP",
+                "Articling Law Student",
+                "Law firm in downtown Oakville is looking to hire an articling student",
+                "Oakville",
+                "To be discussed",
+                "John",
+                "Doe",
+                "john.doe@pll.com",
+                "123-456-7890"
+        );
+        jobPosts.add(initialJobPost);
+    }    
 
     public static class JobsHandler implements HttpHandler {
         @Override

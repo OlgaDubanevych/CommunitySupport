@@ -1,37 +1,41 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Pages/DonationsPage.css";
 
 const MessageForm = ({
-  donation,
-  donorEmail,
+  email,
+  donationInfo,
   onMessageSubmit,
   onCancelClick,
 }) => {
   const [formData, setFormData] = useState({
-    email: donorEmail || "N/A",
-    itemName: donation.itemName,
-    itemDescription: donation.itemDescription,
+    email: email || "N/A", // Set default value to "N/A" if email is not provided
     message: "",
   });
 
+  // Update the donationInfo whenever it changes
+  useEffect(() => {
+    if (donationInfo) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email: donationInfo.email,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email: "N/A", // or any default value if donationInfo is not available
+      }));
+    }
+  }, [donationInfo]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedFormData = { ...formData, donationId: donation.id };
-    onMessageSubmit(updatedFormData);
+    onMessageSubmit(formData);
   };
 
   return (
     <div>
-      <div>
-        <strong>Item Name:</strong> {formData.itemName}
-      </div>
-
-      <div>
-        <strong>Item Description:</strong> {formData.itemDescription}
-      </div>
-
       <form onSubmit={handleSubmit}>
-        <label> Your Message:</label>
+        <label>Your Message:</label>
         <p></p>
         <textarea
           name="message"
@@ -43,7 +47,6 @@ const MessageForm = ({
         />
 
         <br />
-        <p></p>
         <button type="submit">Send Message</button>
         <button type="button" onClick={onCancelClick}>
           Cancel

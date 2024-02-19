@@ -50,7 +50,6 @@ const Questions = () => {
     try {
       console.log("New question received:", newQuestion);
 
-      // Log the category to check if it is available
       console.log("Category:", newQuestion.category);
 
       const formattedQuestion = {
@@ -64,10 +63,8 @@ const Questions = () => {
 
       console.log("Formatted question:", formattedQuestion);
 
-      // Update the state by providing a new array to trigger a re-render
       setAllQuestions((prevQuestions) => [formattedQuestion, ...prevQuestions]);
 
-      // Wait for the state to update and then fetch questions
       await fetchQuestions();
     } catch (error) {
       console.error("Error adding question:", error);

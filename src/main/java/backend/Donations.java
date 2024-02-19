@@ -17,7 +17,7 @@ import java.util.regex.Pattern;
 public class Donations {
 
     private static final List<Donation> donations = new ArrayList<>();
-    private static int donationIdCounter = 1;
+    private static int donationIdCounter = 2;
 
     public enum Category {
         APPLIANCES,
@@ -31,7 +31,17 @@ public class Donations {
         TOYS_AND_GAMES,
         OTHER
     }
-
+    static {
+        Donation initialDonation = new Donation(
+                "1",
+                "Woman clothes",
+                "Women dresses (5), shoes (3 pairs), jackets (2), and apparel - size 42",
+                Category.CLOTHES,
+                "a.dandapani@gmail.com"
+        );
+        donations.add(initialDonation);
+    }
+    
     public static void main(String[] args) throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(7000), 0);
         server.createContext("/api/donations", new DonationsHandler());
@@ -172,35 +182,53 @@ public class Donations {
             }
         }
 
-        private void handleMessagePostRequest(HttpExchange exchange) throws IOException {
-            String path = exchange.getRequestURI().getPath();
-            String[] pathSegments = path.split("/");
-            if (pathSegments.length != 4) {
-                sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid URL");
-                return;
-            }
-        
-            try {
-                int donationId = Integer.parseInt(pathSegments[3]);
-                handleMessage(exchange, donationId);
-            } catch (NumberFormatException e) {
-                sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid donation ID");
-            }
-        }
-        
-        private void handleMessage(HttpExchange exchange, int donationId) throws IOException {
-            Donation donation = findDonationById(donationId);
-            if (donation != null) {
-                String requestBody = new String(exchange.getRequestBody().readAllBytes());
-                System.out.println("Received message request for donation ID: " + donationId);
-                System.out.println("Request body: " + requestBody);
-                sendResponse(exchange, HttpURLConnection.HTTP_OK, "Message received for donation ID: " + donationId);
-            } else {
-                sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND, "Donation not found");
-            }
-        }        
-    
-        
+
+    private void handleMessagePostRequest(HttpExchange exchange) throws IOException {
+    String path = exchange.getRequestURI().getPath();
+    String[] pathSegments = path.split("/");
+    if (pathSegments.length != 4) {
+        sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid URL");
+        return;
+    }
+
+    try {
+        int donationId = Integer.parseInt(pathSegments[3]);
+        handleMessage(exchange, donationId);
+    } catch (NumberFormatException e) {
+        sendResponse(exchange, HttpURLConnection.HTTP_BAD_REQUEST, "Invalid donation ID");
+    }
+}
+
+private void handleMessage(HttpExchange exchange, int donationId) throws IOException {
+    Donation donation = findDonationById(donationId);
+    if (donation != null) {
+        String requestBody = new String(exchange.getRequestBody().readAllBytes());
+        System.out.println("Received message request for donation ID: " + donationId);
+        System.out.println("Request body: " + requestBody);
+
+        String donorEmail = donation.getEmail();
+        String itemName = donation.getItemName();
+        String itemDescription = donation.getItemDescription();
+
+        String message = "Your message has been received. Thank you!";
+        sendEmailToDonor(donorEmail, itemName, itemDescription, message);
+
+        sendResponse(exchange, HttpURLConnection.HTTP_OK, "Message received for donation ID: " + donationId);
+    } else {
+        sendResponse(exchange, HttpURLConnection.HTTP_NOT_FOUND, "Donation not found");
+    }
+}
+
+private void sendEmailToDonor(String email, String itemName, String itemDescription, String message) {
+    System.out.println("Sending email to donor...");
+    System.out.println("To: " + email);
+    System.out.println("Subject: Question about your donation");
+    System.out.println("Body:");
+    System.out.println("Item Name: " + itemName);
+    System.out.println("Item Description: " + itemDescription);
+    System.out.println(message);
+}
+
         private void handleGetRequest(HttpExchange exchange) throws IOException {
             sendResponse(exchange, HttpURLConnection.HTTP_OK, convertDonationsToJson());
         }
@@ -212,7 +240,7 @@ public class Donations {
             }
         }
 
-        private String convertDonationsToJson() {
+        private static String convertDonationsToJson() {
             StringBuilder json = new StringBuilder("[");
             for (Donation donation : donations) {
                 json.append("{");

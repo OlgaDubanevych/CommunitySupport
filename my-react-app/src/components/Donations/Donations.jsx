@@ -113,62 +113,87 @@ const Donations = () => {
 
   const handleShowMessageForm = async (donationId) => {
     try {
-      const donorInfoResponse = await fetch(
+      const donationInfoResponse = await fetch(
         `http://localhost:7000/api/donations/${donationId}`
       );
-      const donorInfoArray = await donorInfoResponse.json();
 
-      console.log(
-        "Donor Information for Donation ID:",
-        donationId,
-        donorInfoArray
-      );
+      if (donationInfoResponse.ok) {
+        const donationInfoArray = await donationInfoResponse.json();
+        const updatedDonationInfo =
+          donationInfoArray.length > 0
+            ? donationInfoArray.find((donation) => donation.id === donationId)
+            : null;
 
-      setShowMessageForm((prev) => ({
-        ...prev,
-        [donationId]: { show: true, donorInfo: donorInfoArray[0] },
-      }));
+        console.log(
+          "donation Information for donation ID:",
+          donationId,
+          updatedDonationInfo
+        );
+
+        setShowMessageForm((prev) => ({
+          ...prev,
+          [donationId]: {
+            show: true,
+            donationInfo: updatedDonationInfo,
+            email: updatedDonationInfo.email, // Pass email here
+          },
+        }));
+      } else {
+        console.error(
+          "Failed to fetch donation information:",
+          donationInfoResponse.status,
+          donationInfoResponse.statusText
+        );
+      }
     } catch (error) {
-      console.error("Error fetching donor information:", error.message);
+      console.error("Error fetching donation information:", error.message);
     }
   };
 
   const handleCancelMessageForm = (donationId) => {
-    setShowMessageForm((prev) => ({ ...prev, [donationId]: false }));
+    setShowMessageForm((prev) => ({
+      ...prev,
+      [donationId]: { show: false, donationInfo: null },
+    }));
   };
 
   const handleMessageSubmit = async (donationId, messageData) => {
     try {
-      const updatedDonationResponse = await fetch(
+      console.log("Donation ID:", donationId); // Log the donationId
+      const response = await fetch(
         `http://localhost:7000/api/donations/${donationId}`
       );
-      const updatedDonation = await updatedDonationResponse.json();
 
-      setDonations((prevDonations) => [
-        updatedDonation,
-        ...prevDonations.filter((donation) => donation.id !== donationId),
-      ]);
+      if (response.ok) {
+        const updatedDonations = await response.json(); // Change variable name to plural to indicate it's an array
+        console.log("Updated donation Information:", updatedDonations); // Log the fetched donations information
 
-      const donorInfoResponse = await fetch(
-        `http://localhost:7000/api/donations/${donationId}`
-      );
-      const donorInfoArray = await donorInfoResponse.json();
+        // Assuming that the donation with the specified ID is the first item in the array
+        const updatedDonation = updatedDonations.find(
+          (donation) => donation.id === donationId
+        );
 
-      if (donorInfoArray.length > 0) {
-        const donorInfo = donorInfoArray[0];
-        const emailBody = `Donor Email: ${donorInfo.email}\nItem Name: ${donorInfo.itemName}\nItem Description: ${donorInfo.itemDescription}\n\n${messageData.message}`;
+        if (updatedDonation) {
+          // Constructing the email body
+          const emailBody = `Item Name: ${updatedDonation.itemName}\nItem Description: ${updatedDonation.itemDescription}\n\n${messageData.message}`;
 
-        const subject = encodeURIComponent("Donation Message");
-        const body = encodeURIComponent(emailBody);
-        const mailtoLink = `mailto:${donorInfo.email}?subject=${subject}&body=${body}`;
+          // Encoding subject and body for the mailto link
+          const subject = encodeURIComponent("Inquiry about your donation");
+          const body = encodeURIComponent(emailBody);
 
-        window.open(mailtoLink);
+          // Constructing the mailto link
+          const mailtoLink = `mailto:${updatedDonation.email}?subject=${subject}&body=${body}`;
 
-        setShowMessageForm((prev) => ({ ...prev, [donationId]: false }));
+          // Opening the mailto link
+          window.open(mailtoLink);
+        } else {
+          console.error("Donation with ID not found:", donationId);
+        }
       } else {
         console.error(
-          "Donor information not found for Donation ID:",
-          donationId
+          "Failed to fetch updated donation:",
+          response.status,
+          response.statusText
         );
       }
     } catch (error) {
@@ -181,6 +206,7 @@ const Donations = () => {
 
     return () => clearInterval(intervalId);
   }, []);
+
   if (loading) {
     return <p>Loading...</p>;
   }
@@ -233,16 +259,26 @@ const Donations = () => {
                 >
                   Message
                 </button>
-                {showMessageForm[donation.id] && (
-                  <MessageForm
-                    donation={donation}
-                    donorInfo={showMessageForm[donation.id].donorInfo}
-                    onMessageSubmit={(data) =>
-                      handleMessageSubmit(donation.id, data)
-                    }
-                    onCancelClick={() => handleCancelMessageForm(donation.id)}
-                  />
-                )}
+                {showMessageForm[donation.id] &&
+                  showMessageForm[donation.id].show && (
+                    <MessageForm
+                      donation={donation}
+                      email={
+                        showMessageForm[donation.id]
+                          ? showMessageForm[donation.id].email
+                          : ""
+                      } // Pass email here
+                      donationInfo={
+                        showMessageForm[donation.id]
+                          ? showMessageForm[donation.id].donationInfo
+                          : null
+                      }
+                      onMessageSubmit={(data) =>
+                        handleMessageSubmit(donation.id, data)
+                      }
+                      onCancelClick={() => handleCancelMessageForm(donation.id)}
+                    />
+                  )}
               </div>
               <hr />
             </div>

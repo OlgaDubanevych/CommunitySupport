@@ -28,7 +28,7 @@ function QuestionDisplay() {
       ) : (
         <div>
           {allQuestions.map((question) => (
-            <div key={question.id}>{/* Question display structure here */}</div>
+            <div key={question.id}>{/* Question display*/}</div>
           ))}
         </div>
       )}

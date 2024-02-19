@@ -47,61 +47,88 @@ const Consultants = () => {
       const consultantInfoResponse = await fetch(
         `http://localhost:7000/api/consultants/${consultantId}`
       );
-      const consultantInfoArray = await consultantInfoResponse.json();
 
-      console.log(
-        "Consultant Information for Consultant ID:",
-        consultantId,
-        consultantInfoArray
-      );
+      if (consultantInfoResponse.ok) {
+        const consultantInfoArray = await consultantInfoResponse.json();
+        const updatedConsultantInfo =
+          consultantInfoArray.length > 0
+            ? consultantInfoArray.find(
+                (consultant) => consultant.id === consultantId
+              )
+            : null;
 
-      setShowMessageForm((prev) => ({
-        ...prev,
-        [consultantId]: { show: true, consultantInfo: consultantInfoArray[0] },
-      }));
+        console.log(
+          "Consultant Information for Consultant ID:",
+          consultantId,
+          updatedConsultantInfo
+        );
+
+        setShowMessageForm((prev) => ({
+          ...prev,
+          [consultantId]: {
+            show: true,
+            consultantInfo: updatedConsultantInfo,
+            email: updatedConsultantInfo.email, // Pass email here
+          },
+        }));
+      } else {
+        console.error(
+          "Failed to fetch consultant information:",
+          consultantInfoResponse.status,
+          consultantInfoResponse.statusText
+        );
+      }
     } catch (error) {
       console.error("Error fetching consultant information:", error.message);
     }
   };
 
   const handleCancelMessageForm = (consultantId) => {
-    setShowMessageForm((prev) => ({ ...prev, [consultantId]: false }));
+    setShowMessageForm((prev) => ({
+      ...prev,
+      [consultantId]: { show: false, consultantInfo: null },
+    }));
   };
 
   const handleMessageSubmit = async (consultantId, messageData) => {
     try {
-      const updatedConsultantResponse = await fetch(
+      console.log("Consultant ID:", consultantId); // Log the consultantId
+      const response = await fetch(
         `http://localhost:7000/api/consultants/${consultantId}`
       );
-      const updatedConsultant = await updatedConsultantResponse.json();
 
-      setConsultants((prevConsultants) => [
-        updatedConsultant,
-        ...prevConsultants.filter(
-          (consultant) => consultant.id !== consultantId
-        ),
-      ]);
+      if (response.ok) {
+        const updatedConsultants = await response.json(); // Change variable name to plural to indicate it's an array
+        console.log("Updated Consultant Information:", updatedConsultants); // Log the fetched consultant information
 
-      const consultantInfoResponse = await fetch(
-        `http://localhost:7000/api/consultants/${consultantId}`
-      );
-      const consultantInfoArray = await consultantInfoResponse.json();
+        // Assuming that the consultant with the specified ID is the first item in the array
+        const updatedConsultant = updatedConsultants.find(
+          (consultant) => consultant.id === consultantId
+        );
 
-      if (consultantInfoArray.length > 0) {
-        const consultantInfo = consultantInfoArray[0];
-        const emailBody = `Consultant Email: ${consultantInfo.email}\n${messageData.message}`;
+        if (updatedConsultant) {
+          // Constructing the email body
+          const emailBody = `Consultant Email: ${updatedConsultant.email}\n${messageData.message}`;
 
-        const subject = encodeURIComponent("Consultant Message");
-        const body = encodeURIComponent(emailBody);
-        const mailtoLink = `mailto:${consultantInfo.email}?subject=${subject}&body=${body}`;
+          // Encoding subject and body for the mailto link
+          const subject = encodeURIComponent(
+            "Inquiry about your immigration services"
+          );
+          const body = encodeURIComponent(emailBody);
 
-        window.open(mailtoLink);
+          // Constructing the mailto link
+          const mailtoLink = `mailto:${updatedConsultant.email}?subject=${subject}&body=${body}`;
 
-        setShowMessageForm((prev) => ({ ...prev, [consultantId]: false }));
+          // Opening the mailto link
+          window.open(mailtoLink);
+        } else {
+          console.error("Consultant with ID not found:", consultantId);
+        }
       } else {
         console.error(
-          "Consultant information not found for Consultant ID:",
-          consultantId
+          "Failed to fetch updated consultant:",
+          response.status,
+          response.statusText
         );
       }
     } catch (error) {
@@ -147,18 +174,28 @@ const Consultants = () => {
                 >
                   Message
                 </button>
-                {showMessageForm[consultant.id] && (
-                  <MessageForm
-                    consultant={consultant}
-                    consultantInfo={
-                      showMessageForm[consultant.id].consultantInfo
-                    }
-                    onMessageSubmit={(data) =>
-                      handleMessageSubmit(consultant.id, data)
-                    }
-                    onCancelClick={() => handleCancelMessageForm(consultant.id)}
-                  />
-                )}
+                {showMessageForm[consultant.id] &&
+                  showMessageForm[consultant.id].show && (
+                    <MessageForm
+                      consultant={consultant}
+                      email={
+                        showMessageForm[consultant.id]
+                          ? showMessageForm[consultant.id].email
+                          : ""
+                      } // Pass email here
+                      consultantInfo={
+                        showMessageForm[consultant.id]
+                          ? showMessageForm[consultant.id].consultantInfo
+                          : null
+                      }
+                      onMessageSubmit={(data) =>
+                        handleMessageSubmit(consultant.id, data)
+                      }
+                      onCancelClick={() =>
+                        handleCancelMessageForm(consultant.id)
+                      }
+                    />
+                  )}
               </div>
               <hr />
             </div>

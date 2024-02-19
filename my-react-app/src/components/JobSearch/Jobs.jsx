@@ -27,8 +27,12 @@ const Jobs = () => {
   };
 
   const handleRecommendClick = (jobTitle) => {
-    setShowRecommendationForm(true);
-    setSelectedJobTitle(jobTitle);
+    const selectedJob = jobs.find((job) => job.jobTitle === jobTitle);
+
+    if (selectedJob) {
+      setShowRecommendationForm(true);
+      setSelectedJobTitle(selectedJob.jobTitle);
+    }
   };
 
   const handleCancelClick = (jobTitle) => {
@@ -123,14 +127,9 @@ const Jobs = () => {
             >
               Recommend
             </button>{" "}
-            {job.showApplicationForm && (
-              <ApplicationForm
-                jobTitle={job.jobTitle}
-                onCancelClick={() => handleCancelClick(job.jobTitle)}
-              />
-            )}
             {showRecommendationForm && selectedJobTitle === job.jobTitle && (
               <RecommendationForm
+                job={job}
                 onCancelClick={() => handleCancelClick(job.jobTitle)}
               />
             )}

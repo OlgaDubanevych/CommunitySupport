@@ -1,27 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../Pages/ImmigrationPage.css";
 
 const MessageForm = ({
-  consultant,
+  email,
   consultantInfo,
   onMessageSubmit,
   onCancelClick,
 }) => {
   const [formData, setFormData] = useState({
-    email: consultantInfo.email || "N/A",
+    email: email || "N/A", // Set default value to "N/A" if email is not provided
     message: "",
   });
 
+  // Update the consultantInfo whenever it changes
+  useEffect(() => {
+    if (consultantInfo) {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email: consultantInfo.email,
+      }));
+    } else {
+      setFormData((prevFormData) => ({
+        ...prevFormData,
+        email: "N/A", // or any default value if consultantInfo is not available
+      }));
+    }
+  }, [consultantInfo]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const updatedFormData = { ...formData, consultantId: consultant.id };
-    onMessageSubmit(updatedFormData);
+    onMessageSubmit(formData);
   };
 
   return (
     <div>
       <form onSubmit={handleSubmit}>
         <label>Your Message:</label>
+        <p></p>
         <textarea
           name="message"
           value={formData.message}

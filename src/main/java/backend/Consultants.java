@@ -28,6 +28,17 @@ public class Consultants {
         System.out.println("Server is running on port 7000");
     }
 
+    static {
+        Consultant initialConsultant1 = new Consultant(
+                "Sarah",
+                "Lee",
+                "Lee Immigration Group",
+                "sarah@leeimmigration.com",
+                "613-261-9253",
+                "Extensive knowledge of Canadian immigration laws and regulations."
+        );
+        consultants.add(initialConsultant1);}
+    
     public static class ConsultantsHandler implements HttpHandler {
 
         @Override
