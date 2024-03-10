@@ -17,9 +17,12 @@ const Donations = () => {
 
       const timeoutId = setTimeout(() => controller.abort(), 180000);
 
-      const response = await fetch("http://localhost:7000/api/donations", {
-        signal,
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations",
+        {
+          signal,
+        }
+      );
 
       clearTimeout(timeoutId);
 
@@ -75,7 +78,7 @@ const Donations = () => {
   const handleRecommendationSubmit = async (donationId, recommendationData) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/donations/${donationId}/recommend`,
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations/${donationId}/recommend`,
         {
           method: "POST",
           headers: {
@@ -89,7 +92,7 @@ const Donations = () => {
         console.log("Recommendation submitted successfully");
 
         const updatedDonationResponse = await fetch(
-          `http://localhost:7000/api/donations/${donationId}`
+          `http://192.168.2.14:7000/donations/${donationId}`
         );
         const updatedDonation = await updatedDonationResponse.json();
 
@@ -114,7 +117,7 @@ const Donations = () => {
   const handleShowMessageForm = async (donationId) => {
     try {
       const donationInfoResponse = await fetch(
-        `http://localhost:7000/api/donations/${donationId}`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations/${donationId}`
       );
 
       if (donationInfoResponse.ok) {
@@ -135,7 +138,7 @@ const Donations = () => {
           [donationId]: {
             show: true,
             donationInfo: updatedDonationInfo,
-            email: updatedDonationInfo.email, // Pass email here
+            email: updatedDonationInfo.email,
           },
         }));
       } else {
@@ -159,32 +162,27 @@ const Donations = () => {
 
   const handleMessageSubmit = async (donationId, messageData) => {
     try {
-      console.log("Donation ID:", donationId); // Log the donationId
+      console.log("Donation ID:", donationId);
       const response = await fetch(
-        `http://localhost:7000/api/donations/${donationId}`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations/${donationId}`
       );
 
       if (response.ok) {
-        const updatedDonations = await response.json(); // Change variable name to plural to indicate it's an array
-        console.log("Updated donation Information:", updatedDonations); // Log the fetched donations information
+        const updatedDonations = await response.json();
+        console.log("Updated donation Information:", updatedDonations);
 
-        // Assuming that the donation with the specified ID is the first item in the array
         const updatedDonation = updatedDonations.find(
           (donation) => donation.id === donationId
         );
 
         if (updatedDonation) {
-          // Constructing the email body
           const emailBody = `Item Name: ${updatedDonation.itemName}\nItem Description: ${updatedDonation.itemDescription}\n\n${messageData.message}`;
 
-          // Encoding subject and body for the mailto link
           const subject = encodeURIComponent("Inquiry about your donation");
           const body = encodeURIComponent(emailBody);
 
-          // Constructing the mailto link
           const mailtoLink = `mailto:${updatedDonation.email}?subject=${subject}&body=${body}`;
 
-          // Opening the mailto link
           window.open(mailtoLink);
         } else {
           console.error("Donation with ID not found:", donationId);
@@ -267,7 +265,7 @@ const Donations = () => {
                         showMessageForm[donation.id]
                           ? showMessageForm[donation.id].email
                           : ""
-                      } // Pass email here
+                      }
                       donationInfo={
                         showMessageForm[donation.id]
                           ? showMessageForm[donation.id].donationInfo

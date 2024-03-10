@@ -14,16 +14,19 @@ function QuestionForms({ addQuestion }) {
     event.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7000/api/questions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          text: questionText,
-          category: category,
-        }),
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/questions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            text: questionText,
+            category: category,
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to submit question");

@@ -36,7 +36,7 @@ function ImmigrationPoll() {
     if (selectedOption) {
       try {
         console.log("Sending data to backend:", selectedOption);
-        const url = `http://localhost:7000/api/poll?option=${selectedOption}`;
+        const url = `https://backend-service-7fgbxiruaq-nn.a.run.app/api/poll?option=${selectedOption}`;
         const response = await fetch(url, {
           method: "POST",
         });

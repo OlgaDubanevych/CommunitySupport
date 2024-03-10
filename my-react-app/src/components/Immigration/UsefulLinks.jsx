@@ -83,13 +83,16 @@ function UsefulLinks() {
     const sendAllWebsitesToBackend = async () => {
       try {
         await new Promise((resolve) => setTimeout(resolve, 3000));
-        const response = await fetch("http://localhost:7000/api/websites", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(links),
-        });
+        const response = await fetch(
+          "https://backend-service-7fgbxiruaq-nn.a.run.app/api/websites",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(links),
+          }
+        );
       } catch (error) {
         console.error("Error during send all websites:", error);
       }
@@ -98,7 +101,7 @@ function UsefulLinks() {
     const fetchAllAverageRatings = async () => {
       try {
         const response = await fetch(
-          "http://localhost:7000/api/websites/all-average-ratings"
+          "https://backend-service-7fgbxiruaq-nn.a.run.app/api/websites/all-average-ratings"
         );
         if (response.ok) {
           const rawText = await response.text();
@@ -124,7 +127,7 @@ function UsefulLinks() {
   const updateAverageRating = async (websiteId, averageRating) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/websites/${websiteId}/average-rating`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/websites/${websiteId}/average-rating`
       );
       if (response.ok) {
         const updatedAverageRating = await response.json();

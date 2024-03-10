@@ -46,13 +46,16 @@ function DonationForm() {
     try {
       console.log("Sending data to backend:", donationData);
 
-      const response = await fetch("http://localhost:7000/api/donations", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(donationData),
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(donationData),
+        }
+      );
 
       if (response.ok) {
         const responseData = await response.json();

@@ -35,13 +35,16 @@ const JobPostingForm = ({ onJobPosted }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:7000/api/jobs", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(jobData),
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/jobs",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(jobData),
+        }
+      );
 
       if (response.ok) {
         setSuccess(true);

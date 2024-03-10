@@ -29,7 +29,9 @@ const DonationSearch = ({ onSearch }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:7000/api/donations");
+        const response = await fetch(
+          "https://backend-service-7fgbxiruaq-nn.a.run.app/api/donations"
+        );
         if (response.ok) {
           const data = await response.json();
           setDonations(data);

@@ -19,13 +19,16 @@ const ApplicationForm = ({ jobTitle, onCancelClick }) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:7000/api/applications", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/applications",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
 
       if (response.ok) {
         setShowMessage(true);

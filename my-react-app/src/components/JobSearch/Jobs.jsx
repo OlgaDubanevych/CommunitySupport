@@ -54,7 +54,9 @@ const Jobs = () => {
 
   const fetchJobs = async () => {
     try {
-      const response = await fetch("http://localhost:7000/api/jobs");
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/jobs"
+      );
       if (response.ok) {
         const data = await response.json();
         setJobs(data);
@@ -77,7 +79,9 @@ const Jobs = () => {
   useEffect(() => {
     const updateJobs = async () => {
       try {
-        const response = await fetch("http://localhost:7000/api/jobs");
+        const response = await fetch(
+          "https://backend-service-7fgbxiruaq-nn.a.run.app/api/jobs"
+        );
         if (response.ok) {
           const data = await response.json();
           setJobs(data);
@@ -120,6 +124,12 @@ const Jobs = () => {
             >
               Apply Now
             </button>
+            {job.showApplicationForm && (
+              <ApplicationForm
+                jobTitle={job.jobTitle}
+                onCancelClick={() => handleCancelClick(job.jobTitle)}
+              />
+            )}
             <p></p>
             <button
               className="submit_c"

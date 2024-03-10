@@ -7,7 +7,9 @@ function SuccessStories() {
 
   const fetchStories = async () => {
     try {
-      const response = await fetch("http://localhost:7000/api/stories");
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/stories"
+      );
 
       if (response.ok) {
         const storiesData = await response.json();

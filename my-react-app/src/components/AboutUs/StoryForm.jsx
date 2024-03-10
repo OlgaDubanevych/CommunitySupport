@@ -19,13 +19,16 @@ const StoryForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:7000/api/stories", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(successStoryData),
-      });
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/stories",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(successStoryData),
+        }
+      );
 
       if (response.ok) {
         console.log("Success story submitted!");

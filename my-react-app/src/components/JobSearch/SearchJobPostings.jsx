@@ -15,7 +15,9 @@ const SearchJobAds = () => {
   const fetchJobs = async (term) => {
     try {
       const response = await fetch(
-        `http://localhost:7000/api/jobs?searchTerm=${encodeURIComponent(term)}`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/jobs?searchTerm=${encodeURIComponent(
+          term
+        )}`
       );
       if (!response.ok) {
         throw new Error("Failed to fetch jobs");

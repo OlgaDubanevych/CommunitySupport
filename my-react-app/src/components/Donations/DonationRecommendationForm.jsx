@@ -81,7 +81,7 @@ const DonationRecommendationForm = ({
               required
             />
           </div>
-          {/* Display item name and description from the donation object */}
+          {/* Display item name and description */}
           <div className="form-field">
             <p className="text">
               Item Name: <strong>{donation.itemName}</strong>

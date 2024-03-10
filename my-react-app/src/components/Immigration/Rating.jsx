@@ -11,7 +11,7 @@ function Rating({ websiteId, updateAverageRating }) {
 
     try {
       const response = await fetch(
-        `http://localhost:7000/api/websites/${websiteId}/rate`,
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/websites/${websiteId}/rate`,
         {
           method: "POST",
           headers: {
@@ -26,7 +26,7 @@ function Rating({ websiteId, updateAverageRating }) {
 
       if (response.ok) {
         const averageRatingResponse = await fetch(
-          `http://localhost:7000/api/websites/${websiteId}/average-rating`
+          `https://backend-service-7fgbxiruaq-nn.a.run.app/api/websites/${websiteId}/average-rating`
         );
         const averageRating = await averageRatingResponse.json();
         updateAverageRating(averageRating);

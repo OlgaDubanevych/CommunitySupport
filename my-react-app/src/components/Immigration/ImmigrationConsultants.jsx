@@ -10,7 +10,9 @@ const Consultants = () => {
 
   const fetchConsultants = async () => {
     try {
-      const response = await fetch("http://localhost:7000/api/consultants");
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/consultants"
+      );
       if (response.ok) {
         const data = await response.json();
         setConsultants(data);
@@ -45,7 +47,7 @@ const Consultants = () => {
   const handleShowMessageForm = async (consultantId) => {
     try {
       const consultantInfoResponse = await fetch(
-        `http://localhost:7000/api/consultants/${consultantId}`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/consultants/${consultantId}`
       );
 
       if (consultantInfoResponse.ok) {
@@ -68,7 +70,7 @@ const Consultants = () => {
           [consultantId]: {
             show: true,
             consultantInfo: updatedConsultantInfo,
-            email: updatedConsultantInfo.email, // Pass email here
+            email: updatedConsultantInfo.email,
           },
         }));
       } else {
@@ -92,34 +94,29 @@ const Consultants = () => {
 
   const handleMessageSubmit = async (consultantId, messageData) => {
     try {
-      console.log("Consultant ID:", consultantId); // Log the consultantId
+      console.log("Consultant ID:", consultantId);
       const response = await fetch(
-        `http://localhost:7000/api/consultants/${consultantId}`
+        `https://backend-service-7fgbxiruaq-nn.a.run.app/api/consultants/${consultantId}`
       );
 
       if (response.ok) {
-        const updatedConsultants = await response.json(); // Change variable name to plural to indicate it's an array
-        console.log("Updated Consultant Information:", updatedConsultants); // Log the fetched consultant information
+        const updatedConsultants = await response.json();
+        console.log("Updated Consultant Information:", updatedConsultants);
 
-        // Assuming that the consultant with the specified ID is the first item in the array
         const updatedConsultant = updatedConsultants.find(
           (consultant) => consultant.id === consultantId
         );
 
         if (updatedConsultant) {
-          // Constructing the email body
           const emailBody = `Consultant Email: ${updatedConsultant.email}\n${messageData.message}`;
 
-          // Encoding subject and body for the mailto link
           const subject = encodeURIComponent(
             "Inquiry about your immigration services"
           );
           const body = encodeURIComponent(emailBody);
 
-          // Constructing the mailto link
           const mailtoLink = `mailto:${updatedConsultant.email}?subject=${subject}&body=${body}`;
 
-          // Opening the mailto link
           window.open(mailtoLink);
         } else {
           console.error("Consultant with ID not found:", consultantId);
@@ -182,7 +179,7 @@ const Consultants = () => {
                         showMessageForm[consultant.id]
                           ? showMessageForm[consultant.id].email
                           : ""
-                      } // Pass email here
+                      }
                       consultantInfo={
                         showMessageForm[consultant.id]
                           ? showMessageForm[consultant.id].consultantInfo

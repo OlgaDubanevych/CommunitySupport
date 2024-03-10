@@ -8,11 +8,10 @@ const MessageForm = ({
   onCancelClick,
 }) => {
   const [formData, setFormData] = useState({
-    email: email || "N/A", // Set default value to "N/A" if email is not provided
+    email: email || "N/A",
     message: "",
   });
 
-  // Update the consultantInfo whenever it changes
   useEffect(() => {
     if (consultantInfo) {
       setFormData((prevFormData) => ({
@@ -22,7 +21,7 @@ const MessageForm = ({
     } else {
       setFormData((prevFormData) => ({
         ...prevFormData,
-        email: "N/A", // or any default value if consultantInfo is not available
+        email: "N/A",
       }));
     }
   }, [consultantInfo]);

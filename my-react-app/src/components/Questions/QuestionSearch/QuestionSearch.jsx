@@ -38,7 +38,9 @@ export default function Search() {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch("http://localhost:7000/api/questions");
+      const response = await fetch(
+        "https://backend-service-7fgbxiruaq-nn.a.run.app/api/questions"
+      );
 
       if (!response.ok) {
         throw new Error("Failed to fetch questions");
